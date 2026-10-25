@@ -6,6 +6,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.net.nsd.NsdManager;
+import android.net.nsd.NsdServiceInfo;
+import java.util.ArrayList;
+import java.util.List;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
@@ -21,6 +27,10 @@ public final class MainActivity extends Activity {
     private TextView status, log;
     private EditText host, port, code, packageName;
     private ScrollView scroll;
+    private NsdManager nsd;
+    private NsdManager.DiscoveryListener discoveryListener;
+    private final List<NsdServiceInfo> discovered = new ArrayList<>();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private static final int BG = 0xff080911, PANEL = 0xff151522, MUTED = 0xffaaa9bf, ACCENT = 0xfff2f0f8;
     private static final String APK = "https://github.com/Sayan201/CleanYourTv/releases/latest/download/standalone-release.apk";
 
@@ -95,9 +105,10 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(-1,-2); tp.topMargin=dp(28); root.addView(title,tp);
         TextView info = text("On your TV, open Developer options → Wireless debugging. Keep your phone and TV on the same Wi-Fi network.",16,MUTED);
         info.setLineSpacing(dp(5),1f); LinearLayout.LayoutParams ip=new LinearLayout.LayoutParams(-1,-2); ip.topMargin=dp(12); root.addView(info,ip);
-        host = field("TV IP address (for example 192.168.1.20)");
-        port = field("Pairing port shown on TV");
-        code = field("6-digit pairing code");
+        button("Find TVs on this Wi-Fi", v -> discoverTvs(), true);
+        host = field("TV IP address (manual fallback)");
+        port = field("Pairing port (filled when discovered)");
+        code = field("6-digit pairing code shown on TV");
         button("Pair with TV", v -> pair(), true);
         status = text("Not connected",14,0xffc3c0d0); status.setPadding(0,dp(14),0,dp(8)); root.addView(status);
         log = text("Pairing instructions and results will appear here.",14,0xffd8d5e3);
@@ -149,6 +160,66 @@ public final class MainActivity extends Activity {
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2); p.topMargin=dp(10); root.addView(b,p); b.setOnClickListener(click);
     }
     private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+0.5f);}
+
+
+    private void discoverTvs() {
+        nsd = (NsdManager) getSystemService(NSD_SERVICE);
+        discovered.clear();
+        append("Searching this Wi-Fi network for Android TV ADB pairing services…");
+        discoveryListener = new NsdManager.DiscoveryListener() {
+            @Override public void onDiscoveryStarted(String type) {}
+            @Override public void onServiceFound(NsdServiceInfo service) {
+                if (!"_adb-tls-pairing._tcp.".equals(service.getServiceType())) return;
+                nsd.resolveService(service, new NsdManager.ResolveListener() {
+                    @Override public void onResolveFailed(NsdServiceInfo s, int error) {}
+                    @Override public void onServiceResolved(NsdServiceInfo resolved) {
+                        runOnUiThread(() -> {
+                            for (NsdServiceInfo old : discovered) {
+                                if (old.getHost().equals(resolved.getHost()) && old.getPort() == resolved.getPort()) return;
+                            }
+                            discovered.add(resolved);
+                            showDiscoveredTvs();
+                        });
+                    }
+                });
+            }
+            @Override public void onServiceLost(NsdServiceInfo service) {}
+            @Override public void onDiscoveryStopped(String type) {}
+            @Override public void onStartDiscoveryFailed(String type, int error) {
+                nsd.stopServiceDiscovery(this);
+                runOnUiThread(() -> append("TV discovery failed (code " + error + "). You can still enter the TV IP manually."));
+            }
+            @Override public void onStopDiscoveryFailed(String type, int error) { nsd.stopServiceDiscovery(this); }
+        };
+        try {
+            nsd.discoverServices("_adb-tls-pairing._tcp.", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
+            mainHandler.postDelayed(() -> {
+                try { if (discoveryListener != null) nsd.stopServiceDiscovery(discoveryListener); } catch (Exception ignored) {}
+                runOnUiThread(() -> {
+                    if (discovered.isEmpty()) append("No ADB pairing service found. Keep Wireless debugging open on the TV and try again; some TVs do not advertise this service.");
+                    else showDiscoveredTvs();
+                });
+            }, 8000);
+        } catch (Exception e) {
+            append("Could not start discovery: " + e.getMessage());
+        }
+    }
+
+    private void showDiscoveredTvs() {
+        if (discovered.isEmpty()) return;
+        String[] labels = new String[discovered.size()];
+        for (int i = 0; i < discovered.size(); i++) {
+            NsdServiceInfo s = discovered.get(i);
+            labels[i] = s.getServiceName() + " — " + s.getHost().getHostAddress() + ":" + s.getPort();
+        }
+        new AlertDialog.Builder(this).setTitle("TVs found on your network")
+            .setItems(labels, (dialog, which) -> {
+                NsdServiceInfo selected = discovered.get(which);
+                host.setText(selected.getHost().getHostAddress());
+                port.setText(String.valueOf(selected.getPort()));
+                append("Found " + labels[which] + ". Enter the pairing code displayed by the TV to authorize this first connection.");
+            }).setNegativeButton("Cancel", null).show();
+    }
 
     private void pair() {
         String h=host.getText().toString().trim(), c=code.getText().toString().trim(); int p;
