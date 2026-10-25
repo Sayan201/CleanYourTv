@@ -298,10 +298,28 @@ public final class MainActivity extends Activity {
     private void run(String cmd,String label) {
         append(label+" …");
         worker.execute(() -> {
-            AdbShellController.Result r=AdbShellController.exec(cmd);
+            boolean ok;
+            String output;
+            if (legacyAdb != null) {
+                try {
+                    output = legacyAdb.shell(cmd);
+                    ok = !AdbShellController.looksLikeError(output);
+                } catch (Throwable t) {
+                    output = t.getMessage() == null ? t.toString() : t.getMessage();
+                    ok = false;
+                    try { legacyAdb.close(); } catch (Throwable ignored) {}
+                    legacyAdb = null;
+                }
+            } else {
+                AdbShellController.Result r = AdbShellController.exec(cmd);
+                ok = r.ok;
+                output = r.output;
+            }
+            final boolean resultOk = ok;
+            final String resultOutput = output == null ? "" : output;
             runOnUiThread(() -> {
-                append((r.ok?"✓ ":"✕ ")+label+"\n"+r.output);
-                if(label.contains("Connection")) status.setText(r.ok?"Connected to TV":"Not connected — pair using TV Wireless debugging");
+                append((resultOk?"✓ ":"✕ ")+label+"\\n"+resultOutput);
+                if(label.contains("Connection")) status.setText(resultOk?"Connected to TV":"Not connected — check ADB authorization and connection mode");
             });
         });
     }
