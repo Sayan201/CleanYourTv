@@ -16,7 +16,22 @@ This repository documents the home screen, package state, install steps, and rec
 - **A lightweight clock screensaver.** It uses a black background and slowly moves the clock to reduce burn-in.
 - **Remote navigation fixes.** Up from the dock can reach the media controls, and focus stays within the correct home-screen row.
 
-The launcher is the native Android app in the launcher folder, with application ID com.gathin.tvhome.custom.
+The original customized launcher is the native Android app in the `launcher` folder, with application ID `com.gathin.tvhome.custom`.
+
+## Standalone CleanYourTV application
+
+The `launcher/standalone` Gradle module builds a second, independently installable application with application ID `com.sayan.cleanyourtv`. It reuses the maintained launcher implementation and resources, so the separate package can offer the same home-screen features without replacing the existing customized app. The manifest displays it as **CleanYourTV Standalone**.
+
+Build the standalone APK from the repository root:
+
+```sh
+cd launcher
+./gradlew --no-daemon :standalone:assembleRelease
+```
+
+The APK is written to `launcher/standalone/build/outputs/apk/release/standalone-release.apk`. GitHub Actions builds and uploads it as the `CleanYourTV-Standalone-APK` workflow artifact on pull requests and pushes covered by CI. The artifact is retained for 14 days. The release build is signed with Gradle's debug signing configuration for sideloading, consistent with the existing customized launcher; it is not a Play Store release.
+
+The standalone module shares the existing source and resource directories rather than maintaining a forked copy of the launcher code. Feature fixes made to the shared implementation therefore apply to both packages. The original installation and its package identity remain unchanged.
 
 ## MiTV-AXFR1 package record
 
@@ -81,10 +96,11 @@ tools/restore.sh examples/xiaomi-mitv-axfr1/observed-state/debloat.txt
 | Path | Purpose |
 |---|---|
 | [launcher/](launcher/) | Android TV launcher source and build scripts |
+| [launcher/standalone/](launcher/standalone/) | Separate app ID and manifest for the standalone build |
 | [tools/](tools/) | ADB connection, package disable/restore, and theme utilities |
 | [MiTV-AXFR1 package record](examples/xiaomi-mitv-axfr1/observed-state/) | This TV's observed package inventory and notes |
 | [Wallpaper credits](docs/wallpaper-sources.md) | Credits for the bundled wallpaper photos |
-| [config.xml](launcher/app/src/main/res/values/config.xml) | Launcher defaults and settings |
+| [config.xml](launcher/app/src/main/res/values/config.xml) | Launcher defaults and settings shared by both apps |
 
 ## Privacy and safety
 
@@ -95,4 +111,3 @@ When setup is finished, turn off Network/ADB debugging in the TV's Developer opt
 ## Project origin
 
 This personalized project is based on [CleanYourTV by Gathin23](https://github.com/Gathin23/cleanyourtv), which is licensed under MIT. The launcher foundation and its license remain here; this README and the MiTV-AXFR1 profile describe the customization for this TV. See [LICENSE](LICENSE).
-
