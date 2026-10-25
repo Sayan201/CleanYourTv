@@ -100,6 +100,9 @@ public final class MainActivity extends Activity {
         code = field("6-digit pairing code");
         button("Pair with TV", v -> pair(), true);
         status = text("Not connected",14,0xffc3c0d0); status.setPadding(0,dp(14),0,dp(8)); root.addView(status);
+        log = text("Pairing instructions and results will appear here.",14,0xffd8d5e3);
+        log.setTextIsSelectable(true); log.setPadding(dp(12),dp(12),dp(12),dp(12));
+        log.setBackground(round(PANEL,16,0xff2b2938,1)); root.addView(log);
         button("Continue to TV tools", v -> showControl(), false);
     }
 
