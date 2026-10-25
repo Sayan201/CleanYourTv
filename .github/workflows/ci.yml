@@ -50,10 +50,9 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon \
-            -x :wirelessdebug:bundleReleaseLocalLintAar \
             :app:testReleaseUnitTest :app:lintRelease :app:assembleRelease \
-            :standalone:testReleaseUnitTest :standalone:lintRelease :standalone:assembleRelease \
-            :companion:assembleRelease
+            :standalone:testReleaseUnitTest :standalone:lintRelease :standalone:assembleRelease
+          ./gradlew --no-daemon :companion:assembleRelease -x :wirelessdebug:bundleReleaseLocalLintAar
       - name: Original launcher stays small
         run: |
           size=$(stat -c %s launcher/app/build/outputs/apk/release/app-release.apk)
