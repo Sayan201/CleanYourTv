@@ -303,7 +303,7 @@ public final class MainActivity extends Activity {
             if (legacyAdb != null) {
                 try {
                     output = legacyAdb.shell(cmd);
-                    ok = !AdbShellController.looksLikeError(output);
+                    String lower = output == null ? "" : output.toLowerCase(java.util.Locale.US);\n                    ok = !(lower.contains("securityexception") || lower.contains("permission denial") || lower.contains("exception occurred") || lower.contains("not found") || lower.contains("error:"));
                 } catch (Throwable t) {
                     output = t.getMessage() == null ? t.toString() : t.getMessage();
                     ok = false;
