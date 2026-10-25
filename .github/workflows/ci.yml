@@ -37,6 +37,12 @@ jobs:
           repository: xswl369/android-wireless-debug
           ref: main
           path: wireless-debug-src
+      - name: Check out Wireless Debug library (Apache-2.0)
+        uses: actions/checkout@v4
+        with:
+          repository: xswl369/android-wireless-debug
+          ref: main
+          path: wireless-debug-src
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
