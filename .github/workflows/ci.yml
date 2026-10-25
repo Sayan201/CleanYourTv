@@ -61,8 +61,8 @@ jobs:
       - name: Upload phone companion APK
         uses: actions/upload-artifact@v4
         with:
-          name: CleanYourTV-Phone-Companion-APK
-          path: launcher/companion/build/outputs/apk/release/companion-release-unsigned.apk
+          name: CleanYourTV-Phone-Companion-Signed-APK
+          path: launcher/companion/build/outputs/apk/release/companion-release.apk
           if-no-files-found: error
           retention-days: 14
       - name: Upload standalone APK
