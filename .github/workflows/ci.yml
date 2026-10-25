@@ -50,6 +50,7 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon \
+            -x :wirelessdebug:bundleReleaseLocalLintAar \
             :app:testReleaseUnitTest :app:lintRelease :app:assembleRelease \
             :standalone:testReleaseUnitTest :standalone:lintRelease :standalone:assembleRelease \
             :companion:assembleRelease
