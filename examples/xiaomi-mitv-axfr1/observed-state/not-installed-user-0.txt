@@ -1,0 +1,10 @@
+# Seen with `pm list packages -u --user 0` and absent from `pm list packages --user 0`
+# on the same MiTV-AXFR1 on 2026-10-25. Informational only; no command consumes this file.
+# Package Manager state does not establish when or why they became unavailable to user 0.
+
+com.amazon.amazonvideo.livingroom
+com.google.android.youtube.tv
+com.google.android.youtube.tvmusic
+com.netflix.ninja
+com.xiaomi.floatingframe
+com.xiaomi.mimusic2

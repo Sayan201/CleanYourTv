@@ -1,0 +1,31 @@
+# Live user-0 snapshot from one Xiaomi MiTV-AXFR1 (rango), Android TV 11.
+# Captured 2026-10-25. This is a record of that TV's state, not a universal safe list
+# for every MiTV-AXFR1 firmware. Review the notes in README.md before applying elsewhere.
+#
+# Apply the packages below with tools/disable.sh or tools/disable.ps1.
+# The install script separately disables com.google.android.tvlauncher after the custom
+# launcher is installed and running; it is recorded in package-state.md, not repeated here.
+# These tools disable packages for user 0; they do not uninstall anything.
+
+android.autoinstalls.config.xioami.dangal
+com.android.tv
+com.droidlogic.droidlivetvsettings
+com.google.android.backdrop
+com.google.android.feedback
+com.google.android.katniss
+com.google.android.play.games
+com.google.android.tungsten.setupwraith
+com.google.android.tvrecommendations
+com.mitv.dream
+com.mitv.gallery
+com.mitv.milinkservice
+com.mitv.tvhome.atv
+com.miui.tv.analytics
+com.xiaomi.android.tvsetup.partnercustomizer
+com.xiaomi.mitv.handbook
+com.xiaomi.mitv.smartshare
+com.xiaomi.mitv.tvmanager
+com.xiaomi.mitv.updateservice
+com.xiaomi.statistic
+com.xiaomo.tv.milegal
+com.xm.webcontent

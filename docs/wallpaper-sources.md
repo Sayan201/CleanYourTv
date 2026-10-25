@@ -1,0 +1,12 @@
+# Wallpaper credits
+
+The seven bundled daily wallpaper images are cropped JPEGs from Unsplash. They are included under
+the [Unsplash License](https://unsplash.com/license).
+
+1. **White Pocket Sunrise** — John Fowler: <https://unsplash.com/photos/a-desert-landscape-with-mountains-in-the-background-tClS6SPq8Zo>
+2. **Waves under a moody sky** — Tim Marshall: <https://unsplash.com/photos/landscape-photography-of-ocean-qKlD2QlK-CY>
+3. **Tropical forest near mountains** — Aditi Nayar: <https://unsplash.com/photos/landscape-photography-of-forest-xBNpwPOA8iQ>
+4. **Mountain lake with a boathouse and surrounding forest** — Rafael Peier: <https://unsplash.com/photos/mountain-lake-with-a-boathouse-and-surrounding-forest-I_XRy-z8m8k>
+5. **Beach seashore during sunset** — Cristofer Maximilian: <https://unsplash.com/photos/beach-seashore-during-sunset-uQDRDqpYJHI>
+6. **Summer night in the Alps** — Marek Piwnicki: <https://unsplash.com/photos/the-night-sky-over-a-mountain-with-stars-above-it-iy2Y6TBThqI>
+7. **Sun over a mountain lake** — Davide Zacchello: <https://unsplash.com/photos/the-sun-shines-brightly-over-a-mountain-lake-xqzHBvjbVL0>

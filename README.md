@@ -422,4 +422,3 @@ Security issues: report them privately through the [Security tab](https://github
 
 MIT, see [`LICENSE`](LICENSE). The Outfit typeface is under the SIL Open Font License, see
 `launcher/FONT-LICENSE-OFL.txt`.
-
