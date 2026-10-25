@@ -10,7 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri('https://jitpack.io') }
     }
 }
 rootProject.name = "tvhome"
 include ':app', ':standalone'
+
+include ':companion', ':wirelessdebug'
+project(':wirelessdebug').projectDir = file('../wireless-debug-src/wirelessdebug')
