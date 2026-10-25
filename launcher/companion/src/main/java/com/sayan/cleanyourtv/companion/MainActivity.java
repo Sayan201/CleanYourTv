@@ -20,12 +20,18 @@ import com.wirelessdebug.service.AdbPairClient;
 import com.wirelessdebug.service.AdbShellController;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import com.wirelessdebug.WdbContext;
+import com.wirelessdebug.service.ShizukuBootstrap;
+import com.wirelessdebug.service.AdbClient;
 
 public final class MainActivity extends Activity {
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private LinearLayout root, page;
     private TextView status, log;
-    private EditText host, port, code, packageName;
+    private EditText host, port, code, packageName, legacyHost, legacyPort;
+    private AdbClient legacyAdb;
     private ScrollView scroll;
     private NsdManager nsd;
     private NsdManager.DiscoveryListener discoveryListener;
@@ -103,13 +109,20 @@ public final class MainActivity extends Activity {
         TextView title = text("Connect your TV", 30, Color.WHITE);
         title.setTypeface(Typeface.create("sans-serif-light",Typeface.NORMAL));
         LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(-1,-2); tp.topMargin=dp(28); root.addView(title,tp);
-        TextView info = text("On your TV, open Developer options → Wireless debugging. Keep your phone and TV on the same Wi-Fi network.",16,MUTED);
+        TextView info = text("Choose the connection method your TV supports. Keep your phone and TV on the same Wi-Fi network.",16,MUTED);
         info.setLineSpacing(dp(5),1f); LinearLayout.LayoutParams ip=new LinearLayout.LayoutParams(-1,-2); ip.topMargin=dp(12); root.addView(info,ip);
         button("Find TVs on this Wi-Fi", v -> discoverTvs(), true);
         host = field("TV IP address (manual fallback)");
         port = field("Pairing port (filled when discovered)");
         code = field("6-digit pairing code shown on TV");
-        button("Pair with TV", v -> pair(), true);
+        button("Pair with TV (newer Android)", v -> pair(), true);
+        TextView legacyTitle = text("LEGACY ADB · NO PAIRING CODE", 12, 0xffb5b2c9);
+        legacyTitle.setPadding(0, dp(24), 0, dp(4)); root.addView(legacyTitle);
+        TextView legacyInfo = text("For TVs with network ADB enabled on port 5555. The TV must trust this phone’s ADB key.", 14, MUTED);
+        legacyInfo.setPadding(0, dp(4), 0, dp(4)); root.addView(legacyInfo);
+        legacyHost = field("TV IP address");
+        legacyPort = field("ADB port (default 5555)"); legacyPort.setText("5555");
+        button("Connect using legacy ADB", v -> connectLegacy(), true);
         status = text("Not connected",14,0xffc3c0d0); status.setPadding(0,dp(14),0,dp(8)); root.addView(status);
         log = text("Pairing instructions and results will appear here.",14,0xffd8d5e3);
         log.setTextIsSelectable(true); log.setPadding(dp(12),dp(12),dp(12),dp(12));
@@ -219,6 +232,40 @@ public final class MainActivity extends Activity {
                 port.setText(String.valueOf(selected.getPort()));
                 append("Found " + labels[which] + ". Enter the pairing code displayed by the TV to authorize this first connection.");
             }).setNegativeButton("Cancel", null).show();
+    }
+
+    private void connectLegacy() {
+        String h = legacyHost == null ? "" : legacyHost.getText().toString().trim();
+        int p;
+        try { p = Integer.parseInt(legacyPort.getText().toString().trim()); }
+        catch (Exception e) { append("Enter port 5555."); return; }
+        if (h.isEmpty() || p < 1 || p > 65535) { append("Enter a valid TV IP address and port."); return; }
+        append("Connecting to legacy ADB at " + h + ":" + p + " (no pairing code) …");
+        worker.execute(() -> {
+            AdbClient candidate = new AdbClient();
+            try {
+                File dir = new File(getFilesDir(), ShizukuBootstrap.ASSET_DIR);
+                ShizukuBootstrap.ensureAssets(this);
+                File keyFile = new File(dir, ShizukuBootstrap.ADB_KEY);
+                if (!keyFile.isFile()) throw new IllegalStateException("ADB key asset is missing.");
+                String pem = new String(java.nio.file.Files.readAllBytes(keyFile.toPath()), StandardCharsets.UTF_8);
+                java.security.PrivateKey key = AdbClient.loadKey(pem);
+                candidate.tls = false;
+                if (!candidate.connect(h, p, key)) throw new IllegalStateException("ADB connection was not accepted.");
+                String model = candidate.shell("getprop ro.product.model");
+                legacyAdb = candidate;
+                PairState.markPaired(this);
+                runOnUiThread(() -> {
+                    append("✓ Legacy ADB connected to " + h + ":" + p + "\\nTV model: " + model.trim());
+                    showControl();
+                });
+            } catch (Throwable t) {
+                candidate.close();
+                String message = t.getMessage() == null ? t.toString() : t.getMessage();
+                runOnUiThread(() -> append("Legacy ADB failed: " + message
+                    + "\\nCheck that port 5555 is reachable and this phone's ADB key is authorized on the TV."));
+            }
+        });
     }
 
     private void pair() {
