@@ -37,6 +37,8 @@ jobs:
           repository: xswl369/android-wireless-debug
           ref: main
           path: wireless-debug-src
+      - name: Enable legacy ADB authorization prompt
+        run: python3 tools/patch_wireless_debug_adb_auth.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
