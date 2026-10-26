@@ -13,6 +13,26 @@ new = """                } else if (p.arg0 == AUTH_RSAPUBLICKEY) {
 if old not in source:
     raise SystemExit("Expected AUTH_RSAPUBLICKEY branch not found; refusing to patch.")
 source = source.replace(old, new, 1)
+auth_old = """        int authTries = 0;
+        while (authTries++ < 4) {
+            if (p.command.equals("CNXN")) return true;
+            if (p.command.equals("AUTH")) {
+                if (p.arg0 == AUTH_TOKEN && p.data != null && p.data.length > 0) {"""
+auth_new = """        int authTries = 0;
+        boolean signatureSent = false;
+        while (authTries++ < 4) {
+            if (p.command.equals("CNXN")) return true;
+            if (p.command.equals("AUTH")) {
+                if (p.arg0 == AUTH_TOKEN && p.data != null && p.data.length > 0) {
+                    if (signatureSent) {
+                        writePacket("AUTH", AUTH_RSAPUBLICKEY, 0, adbPublicKeyPayload(key));
+                        p = readPacket();
+                        continue;
+                    }
+                    signatureSent = true;"""
+if auth_old not in source:
+    raise SystemExit("AUTH token handling insertion point not found; refusing to patch.")
+source = source.replace(auth_old, auth_new, 1)
 marker = """    /** 构造 KeyManager：直接用 PEM key + 证书，忽略服务器 CA 列表过滤，强制发送客户端证书。 */"""
 method = r'''    /** Serialize the RSA public key in the legacy ADB wire format and request device authorization. */
     private static byte[] adbPublicKeyPayload(PrivateKey privateKey) throws Exception {
