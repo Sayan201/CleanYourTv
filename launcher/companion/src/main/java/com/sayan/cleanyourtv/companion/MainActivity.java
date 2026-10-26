@@ -140,11 +140,8 @@ public final class MainActivity extends Activity {
             button("Connect to a TV",v->showPairing(),true);
         } else {
             button("Check TV connection",v->run("getprop ro.product.model; getprop ro.build.version.release","Connection check"),true);
-            button("List installed third-party apps",v->run("pm list packages -3","Third-party apps"),false);
-            packageName=field("Package name to disable / restore");
-            button("Disable selected app",v->packageAction(false),false);
-            button("Restore selected app",v->packageAction(true),false);
-            button("Install / update CleanYourTV launcher",v->installLauncher(),false);
+            button("Disable recommended apps + install launcher",v->cleanRecommendedAndInstallLauncher(),true);
+            button("Update launcher",v->installLauncher(),false);
             button("Reconnect / pair another TV",v->showPairing(),false);
         }
         TextView logTitle=text("ACTIVITY",12,0xffaaa6bf); logTitle.setPadding(0,dp(24),0,dp(8)); root.addView(logTitle);
@@ -311,14 +308,26 @@ public final class MainActivity extends Activity {
             if(r.ok) run("getprop ro.product.model; getprop ro.build.version.release","Verify connection");
         });
     }
-    private void packageAction(boolean restore) {
-        String pkg=packageName.getText().toString().trim();
-        if(!pkg.matches("[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)+")){append("Enter a valid package name.");return;}
-        new AlertDialog.Builder(this).setTitle(restore?"Restore app?":"Disable app?")
-            .setMessage((restore?"Re-enable ":"Disable ")+pkg+"? Only act on packages you recognize. Never disable Settings, System UI, Home/launcher, input or account components.")
-            .setNegativeButton("Cancel",null).setPositiveButton(restore?"Restore":"Disable",(d,w)->
-                run("pm "+(restore?"enable":"disable-user --user 0")+" "+pkg,(restore?"Restore ":"Disable ")+pkg)).show();
+    private void cleanRecommendedAndInstallLauncher() {
+        new AlertDialog.Builder(this).setTitle("Clean this TV and install launcher?")
+            .setMessage("Downloads the Xiaomi MiTV-AXFR1 recommended package list from your CleanYourTV repository, disables those packages for user 0 (not uninstall them), then installs the CleanYourTV launcher. Only use this on a Xiaomi MiTV-AXFR1. Keep the TV on Wi-Fi.")
+            .setNegativeButton("Cancel",null).setPositiveButton("Continue",(d,w)->{
+                String profile = "https://raw.githubusercontent.com/Sayan201/CleanYourTv/main/examples/xiaomi-mitv-axfr1/debloat.txt";
+                String cmd = "MODEL=$(getprop ro.product.model); echo TV_MODEL:$MODEL; "
+                    + "case \"$MODEL\" in *AXFR1*|*axfr1*) ;; *) echo 'ERROR: Automatic cleanup profile only supports MiTV-AXFR1; no packages changed.'; exit 2;; esac; "
+                    + "mkdir -p /data/local/tmp/cleanyourtv; "
+                    + "(curl -fL --connect-timeout 15 --max-time 60 '" + profile + "' -o /data/local/tmp/cleanyourtv/debloat.txt || wget -O /data/local/tmp/cleanyourtv/debloat.txt '" + profile + "'); "
+                    + "test -s /data/local/tmp/cleanyourtv/debloat.txt || exit 3; "
+                    + "while IFS= read -r line; do pkg=$(echo \"$line\" | sed 's/#.*//' | tr -d '\\r' | tr -d ' '); "
+                    + "case \"$pkg\" in '') continue;; *[!A-Za-z0-9._]*|.*|*..*|*.) echo \"Skipping invalid entry: $pkg\"; continue;; esac; "
+                    + "echo \"Disabling $pkg\"; pm disable-user --user 0 \"$pkg\" || echo \"Could not disable $pkg\"; "
+                    + "done < /data/local/tmp/cleanyourtv/debloat.txt; "
+                    + "(curl -fL --connect-timeout 15 --max-time 180 '" + APK + "' -o /data/local/tmp/cleanyourtv/launcher.apk || wget -O /data/local/tmp/cleanyourtv/launcher.apk '" + APK + "'); "
+                    + "pm install -r /data/local/tmp/cleanyourtv/launcher.apk";
+                run(cmd,"Disable recommended apps + install launcher");
+            }).show();
     }
+
     private void installLauncher() {
         new AlertDialog.Builder(this).setTitle("Install CleanYourTV launcher?")
             .setMessage("Downloads the latest APK from GitHub Releases onto the TV and asks Android Package Manager to install/update it. The TV needs internet access; some TV firmware may block this.")
