@@ -329,13 +329,42 @@ public final class MainActivity extends Activity {
     }
 
     private void installLauncher() {
-        new AlertDialog.Builder(this).setTitle("Install CleanYourTV launcher?")
-            .setMessage("Downloads the latest APK from GitHub Releases onto the TV and asks Android Package Manager to install/update it. The TV needs internet access; some TV firmware may block this.")
-            .setNegativeButton("Cancel",null).setPositiveButton("Install",(d,w)->{
-                String cmd="mkdir -p /data/local/tmp/cleanyourtv && (curl -fL --connect-timeout 15 --max-time 180 '"+APK+"' -o /data/local/tmp/cleanyourtv/launcher.apk || wget -O /data/local/tmp/cleanyourtv/launcher.apk '"+APK+"') && pm install -r /data/local/tmp/cleanyourtv/launcher.apk";
-                run(cmd,"Install launcher");
+        new AlertDialog.Builder(this).setTitle("Update CleanYourTV launcher?")
+            .setMessage("Downloads the latest launcher APK to this phone, transfers it to the TV over ADB, then installs it through Android Package Manager. No manual installer prompt on the TV is intended.")
+            .setNegativeButton("Cancel",null).setPositiveButton("Update",(d,w)->{
+                append("Downloading latest launcher APK to phone…");
+                worker.execute(() -> {
+                    java.io.File apk = new java.io.File(getCacheDir(),"cleanyourtv-launcher-update.apk");
+                    try {
+                        java.net.HttpURLConnection conn = (java.net.HttpURLConnection)new java.net.URL(APK).openConnection();
+                        conn.setConnectTimeout(15000); conn.setReadTimeout(120000);
+                        conn.setInstanceFollowRedirects(true); conn.setRequestProperty("User-Agent","CleanYourTV-Companion");
+                        int code = conn.getResponseCode();
+                        if(code != 200) throw new IllegalStateException("GitHub Releases returned HTTP " + code + ". Publish standalone-release.apk first.");
+                        try(java.io.InputStream in=conn.getInputStream(); java.io.FileOutputStream out=new java.io.FileOutputStream(apk)){
+                            byte[] buffer=new byte[32768]; int n; while((n=in.read(buffer))!=-1) out.write(buffer,0,n);
+                        } finally { conn.disconnect(); }
+                        if(apk.length()<100000) throw new IllegalStateException("Downloaded APK is unexpectedly small ("+apk.length()+" bytes).");
+                        byte[] bytes;
+                        try(java.io.FileInputStream in=new java.io.FileInputStream(apk); java.io.ByteArrayOutputStream out=new java.io.ByteArrayOutputStream()){
+                            byte[] buffer=new byte[32768]; int n; while((n=in.read(buffer))!=-1) out.write(buffer,0,n); bytes=out.toByteArray();
+                        }
+                        if(legacyAdb != null) {
+                            legacyAdb.push(bytes,"/data/local/tmp/cleanyourtv-launcher.apk","0644");
+                            String result=legacyAdb.shell("pm install -r /data/local/tmp/cleanyourtv-launcher.apk");
+                            runOnUiThread(()->append("ADB launcher update result:\n"+result));
+                        } else {
+                            AdbShellController.Result result=AdbShellController.pushAndInstall(bytes,"/data/local/tmp/cleanyourtv-launcher.apk");
+                            runOnUiThread(()->append((result.ok?"✓ ":"✕ ")+"ADB launcher update: "+result.output));
+                        }
+                    } catch(Throwable t) {
+                        String msg=t.getMessage()==null?t.toString():t.getMessage();
+                        runOnUiThread(()->append("Launcher update failed: "+msg));
+                    } finally { apk.delete(); }
+                });
             }).show();
     }
+
     private void run(String cmd,String label) {
         append(label+" …");
         worker.execute(() -> {
