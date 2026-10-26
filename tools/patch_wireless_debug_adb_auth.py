@@ -82,3 +82,31 @@ if marker not in source:
 source = source.replace(marker, method + marker, 1)
 path.write_text(source, encoding="utf-8")
 print("Patched legacy ADB public-key authorization flow.")
+
+controller_path = Path("wireless-debug-src/wirelessdebug/src/main/java/com/wirelessdebug/service/AdbShellController.java")
+controller = controller_path.read_text(encoding="utf-8")
+controller_marker = "    public static boolean isConnected() {"
+controller_method = """    /** Push an APK over the active ADB sync channel and install it without opening a TV-side installer UI. */
+    public static Result pushAndInstall(byte[] apkBytes, String remotePath) {
+        synchronized (LOCK) {
+            try {
+                AdbClient client = getClient();
+                if (client == null) return new Result(false, "ADB is not connected; pair the TV first.");
+                client.push(apkBytes, remotePath, "0644");
+                String output = client.shell("pm install -r " + remotePath);
+                boolean ok = !looksLikeError(output) && output != null && output.toLowerCase(java.util.Locale.US).contains("success");
+                lastUsedMs = System.currentTimeMillis();
+                return new Result(ok, output == null ? "" : output);
+            } catch (Throwable t) {
+                return new Result(false, t.getMessage() != null ? t.getMessage() : t.toString());
+            }
+        }
+    }
+
+"""
+if controller_marker not in controller:
+    raise SystemExit("AdbShellController insertion marker not found; refusing to patch.")
+if "pushAndInstall(byte[] apkBytes" not in controller:
+    controller = controller.replace(controller_marker, controller_method + controller_marker, 1)
+    controller_path.write_text(controller, encoding="utf-8")
+print("Added ADB file transfer and silent package install for the modern ADB connection.")
