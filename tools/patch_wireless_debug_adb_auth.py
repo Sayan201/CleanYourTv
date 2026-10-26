@@ -26,11 +26,14 @@ method = r'''    /** Serialize the RSA public key in the legacy ADB wire format 
         int words = (n.bitLength() + 31) / 32;
         byte[] modulus = toLittleEndian(n, words * 4);
         java.math.BigInteger radix = java.math.BigInteger.ONE.shiftLeft(words * 32);
-        java.math.BigInteger rr = radix.mod(n).multiply(radix.mod(n)).mod(n);
+        java.math.BigInteger rr = radix.modPow(java.math.BigInteger.TWO, n);
         byte[] rrBytes = toLittleEndian(rr, words * 4);
-        java.nio.ByteBuffer b = java.nio.ByteBuffer.allocate(4 + words * 4 + words * 4 + 4)
+        java.math.BigInteger r32 = java.math.BigInteger.ONE.shiftLeft(32);
+        int n0inv = n.mod(r32).modInverse(r32).negate().intValue();
+        java.nio.ByteBuffer b = java.nio.ByteBuffer.allocate(4 + 4 + words * 4 + words * 4 + 4)
                 .order(java.nio.ByteOrder.LITTLE_ENDIAN);
         b.putInt(words);
+        b.putInt(n0inv);
         b.put(modulus);
         b.put(rrBytes);
         b.putInt(exponent.intValue());
