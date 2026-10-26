@@ -178,44 +178,64 @@ public final class MainActivity extends Activity {
     private void discoverTvs() {
         nsd = (NsdManager) getSystemService(NSD_SERVICE);
         discovered.clear();
-        append("Searching this Wi-Fi network for Android TV ADB pairing services…");
-        discoveryListener = new NsdManager.DiscoveryListener() {
-            @Override public void onDiscoveryStarted(String type) {}
-            @Override public void onServiceFound(NsdServiceInfo service) {
-                if (!"_adb-tls-pairing._tcp.".equals(service.getServiceType())) return;
-                nsd.resolveService(service, new NsdManager.ResolveListener() {
-                    @Override public void onResolveFailed(NsdServiceInfo s, int error) {}
-                    @Override public void onServiceResolved(NsdServiceInfo resolved) {
-                        runOnUiThread(() -> {
-                            for (NsdServiceInfo old : discovered) {
-                                if (old.getHost().equals(resolved.getHost()) && old.getPort() == resolved.getPort()) return;
-                            }
-                            discovered.add(resolved);
-                            showDiscoveredTvs();
-                        });
-                    }
-                });
-            }
-            @Override public void onServiceLost(NsdServiceInfo service) {}
-            @Override public void onDiscoveryStopped(String type) {}
-            @Override public void onStartDiscoveryFailed(String type, int error) {
-                nsd.stopServiceDiscovery(this);
-                runOnUiThread(() -> append("TV discovery failed (code " + error + "). You can still enter the TV IP manually."));
-            }
-            @Override public void onStopDiscoveryFailed(String type, int error) { nsd.stopServiceDiscovery(this); }
+        append("Searching this Wi-Fi network for Android TV, Google Cast, and ADB services…");
+        final String[] serviceTypes = {
+            "_androidtvremote2._tcp.", "_googlecast._tcp.", "_adb._tcp.",
+            "_adb-tls-connect._tcp.", "_adb-tls-pairing._tcp."
         };
-        try {
-            nsd.discoverServices("_adb-tls-pairing._tcp.", NsdManager.PROTOCOL_DNS_SD, discoveryListener);
-            mainHandler.postDelayed(() -> {
-                try { if (discoveryListener != null) nsd.stopServiceDiscovery(discoveryListener); } catch (Exception ignored) {}
-                runOnUiThread(() -> {
-                    if (discovered.isEmpty()) append("No ADB pairing service found. Keep Wireless debugging open on the TV and try again; some TVs do not advertise this service.");
-                    else showDiscoveredTvs();
-                });
-            }, 8000);
-        } catch (Exception e) {
-            append("Could not start discovery: " + e.getMessage());
+        final List<NsdManager.DiscoveryListener> listeners = new ArrayList<>();
+        final java.util.Set<String> seen = new java.util.HashSet<>();
+        for (String serviceType : serviceTypes) {
+            NsdManager.DiscoveryListener listener = new NsdManager.DiscoveryListener() {
+                @Override public void onDiscoveryStarted(String type) {}
+                @Override public void onServiceFound(NsdServiceInfo service) {
+                    nsd.resolveService(service, new NsdManager.ResolveListener() {
+                        @Override public void onResolveFailed(NsdServiceInfo s, int error) {}
+                        @Override public void onServiceResolved(NsdServiceInfo resolved) {
+                            runOnUiThread(() -> {
+                                if (resolved.getHost() == null) return;
+                                String key = resolved.getServiceType() + "/" + resolved.getServiceName()
+                                    + "/" + resolved.getHost().getHostAddress() + "/" + resolved.getPort();
+                                if (!seen.add(key)) return;
+                                discovered.add(resolved);
+                                if (legacyHost != null && legacyHost.getText().toString().trim().isEmpty()) {
+                                    legacyHost.setText(resolved.getHost().getHostAddress());
+                                }
+                                append("Discovered " + resolved.getServiceName() + " at "
+                                    + resolved.getHost().getHostAddress() + ":" + resolved.getPort()
+                                    + " (" + resolved.getServiceType() + ")");
+                            });
+                        }
+                    });
+                }
+                @Override public void onServiceLost(NsdServiceInfo service) {}
+                @Override public void onDiscoveryStopped(String type) {}
+                @Override public void onStartDiscoveryFailed(String type, int error) {
+                    try { nsd.stopServiceDiscovery(this); } catch (Exception ignored) {}
+                }
+                @Override public void onStopDiscoveryFailed(String type, int error) {
+                    try { nsd.stopServiceDiscovery(this); } catch (Exception ignored) {}
+                }
+            };
+            try {
+                nsd.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, listener);
+                listeners.add(listener);
+            } catch (Exception e) {
+                append("Could not start " + serviceType + " discovery: " + e.getMessage());
+            }
         }
+        mainHandler.postDelayed(() -> {
+            for (NsdManager.DiscoveryListener listener : listeners) {
+                try { nsd.stopServiceDiscovery(listener); } catch (Exception ignored) {}
+            }
+            runOnUiThread(() -> {
+                if (discovered.isEmpty()) {
+                    append("No advertised TV services found. Some older TVs do not advertise mDNS; enter the TV IP or use legacy ADB on port 5555.");
+                    return;
+                }
+                showDiscoveredTvs();
+            });
+        }, 10000);
     }
 
     private void showDiscoveredTvs() {
@@ -223,14 +243,26 @@ public final class MainActivity extends Activity {
         String[] labels = new String[discovered.size()];
         for (int i = 0; i < discovered.size(); i++) {
             NsdServiceInfo s = discovered.get(i);
-            labels[i] = s.getServiceName() + " — " + s.getHost().getHostAddress() + ":" + s.getPort();
+            labels[i] = s.getServiceName() + " — " + s.getHost().getHostAddress() + ":" + s.getPort()
+                + " [" + s.getServiceType() + "]";
         }
-        new AlertDialog.Builder(this).setTitle("TVs found on your network")
+        new AlertDialog.Builder(this).setTitle("TV services found on your network")
             .setItems(labels, (dialog, which) -> {
                 NsdServiceInfo selected = discovered.get(which);
-                host.setText(selected.getHost().getHostAddress());
-                port.setText(String.valueOf(selected.getPort()));
-                append("Found " + labels[which] + ". Enter the pairing code displayed by the TV to authorize this first connection.");
+                String ip = selected.getHost().getHostAddress();
+                String type = selected.getServiceType();
+                if ("_adb-tls-pairing._tcp.".equals(type)) {
+                    host.setText(ip);
+                    port.setText(String.valueOf(selected.getPort()));
+                    append("Selected Wireless Debugging pairing service. Enter the pairing code displayed by the TV.");
+                } else if ("_adb-tls-connect._tcp.".equals(type)) {
+                    host.setText(ip);
+                    port.setText(String.valueOf(selected.getPort()));
+                    append("Selected ADB TLS connect service. If the TV requires pairing, pair it first.");
+                } else {
+                    legacyHost.setText(ip);
+                    append("Selected TV host " + ip + ". For an older TV with network ADB enabled, connect using legacy ADB on port 5555.");
+                }
             }).setNegativeButton("Cancel", null).show();
     }
 
