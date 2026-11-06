@@ -37,11 +37,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
 
-      - name: Build CleanYourTv launcher APKs
+      - name: Build CleanYourTv launcher APK
         working-directory: launcher
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon :app:assembleRelease :standalone:assembleRelease
+          ./gradlew --no-daemon :app:assembleRelease
 
       - name: Build SickTv companion APK
         working-directory: launcher/companion
@@ -52,11 +52,18 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release-assets
-          cp launcher/app/build/outputs/apk/release/app-release.apk release-assets/app-release.apk
-          cp launcher/app/build/outputs/apk/release/app-release.apk release-assets/cleanyourtv-launcher.apk
-          cp launcher/standalone/build/outputs/apk/release/standalone-release.apk release-assets/cleanyourtv-standalone.apk
+          cp launcher/app/build/outputs/apk/release/app-release.apk release-assets/launcher.apk
           cp launcher/companion/app/build/outputs/apk/github/release/app-github-release.apk release-assets/sicktv-companion.apk
           ls -la release-assets
+
+      - name: Clean legacy release assets
+        if: github.ref_type != 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete-asset latest app-release.apk -y || true
+          gh release delete-asset latest cleanyourtv-launcher.apk -y || true
+          gh release delete-asset latest cleanyourtv-standalone.apk -y || true
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -68,19 +75,16 @@ jobs:
           make_latest: true
           generate_release_notes: ${{ github.ref_type == 'tag' }}
           files: |
-            release-assets/app-release.apk
-            release-assets/cleanyourtv-launcher.apk
+            release-assets/launcher.apk
             release-assets/sicktv-companion.apk
-            release-assets/cleanyourtv-standalone.apk
           body: |
             ## CleanYourTv & SickTv Companion
 
             Official signed Android APK packages for your Android TV and Android phone.
 
-            ### Downloads
-            - **`app-release.apk`** / **`cleanyourtv-launcher.apk`**: CleanYourTv Launcher for Android TV (`com.sayan.tvhome`).
-            - **`sicktv-companion.apk`**: SickTv Companion app for Android phones (`app.sicktv`). Features wireless ADB TV connection, 1-click debloating with device-specific profiles, and seamless launcher installer.
-            - **`cleanyourtv-standalone.apk`**: Standalone CleanYourTv build (`com.sayan.cleanyourtv`).
+            ### Downloads (2 Apps)
+            - **`launcher.apk`**: CleanYourTv Launcher for Android TV (`com.sayan.tvhome`).
+            - **`sicktv-companion.apk`**: SickTv Companion app for Android phones (`app.sicktv`). Features wireless ADB TV connection, 1-click debloating with device-specific profiles, and seamless launcher setup.
 
             ---
             *Signed with project release key for persistent sideloading and verified updates.*

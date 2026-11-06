@@ -3,7 +3,7 @@
   "launchers": [
     { "package": "com.sayan.tvhome", "name": "CleanYourTv Launcher", "about": "Minimal, fast TV launcher with fluid dock navigation and customizable widgets.",
       "signers": ["6299aefa036ad5aeb2b7626a4aa32aae2919bb9965d4a1bc65da2c9716f4f19c"], "max_mb": 64,
-      "releases": "https://github.com/Sayan201/CleanYourTv/releases", "apk": "app-release.apk",
+      "releases": "https://github.com/Sayan201/CleanYourTv/releases", "apk": "launcher.apk",
       "icon": { "file": "images/cleanyourtv-icon.png", "sha256": "a92d20aecdc4d5f862ae37b7c15c312484f597ecd66a6b96fccf7adf4b3cfd3c" },
       "screenshot": { "file": "images/cleanyourtv.png", "sha256": "75a842abb82327a3e15f2f147d76c2ebd591b3331cce8c0bd6bfa8e77890056d" } },
     { "package": "com.spocky.projengmenu", "name": "Projectivy Launcher", "about": "The most popular. Rows, wallpapers and icons you can change.",

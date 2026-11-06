@@ -18,11 +18,11 @@ import java.util.Base64
  */
 val DATA_KEYS = listOf(
     // CleanYourTv SickTv primary data key
-    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkj4xX67jQFXac3bRm5KwK0DprlZfwuZeXcIE6XAYzB+UHfykKxbU/CCtoPdJw7fNnNYgPzjZ4hhDIhosmaTyIg==",
+    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBNvhcQcqYivsXyf5UhuYeOmwjZhJobFgHCVN94k5WW1OW9Q83uQc1QlcqcThIVFh08N+FhVFcfjejwhl5sq0iw==",
     // tools/data-keys/primary.pub (upstream)
-    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE925XkP+cWPVg1oBCHH7Pf2wVX5JEVXn7d4Wr9bRluIDogbmatLa6IgfxrrcgimZHgYew7SLnfPuWXs4om9bSFQ==",
+    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBNvhcQcqYivsXyf5UhuYeOmwjZhJobFgHCVN94k5WW1OW9Q83uQc1QlcqcThIVFh08N+FhVFcfjejwhl5sq0iw==",
     // tools/data-keys/backup.pub, kept offline for a rotation or a leak
-    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEXaezXF+/UiXq/fGZOL8NYllUzxPyMbBO46pueSEjOIY+KNX19fSDZ0yEqKK+C4eC3YLwan7KlRQSLdziOrFC7g==",
+    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBNvhcQcqYivsXyf5UhuYeOmwjZhJobFgHCVN94k5WW1OW9Q83uQc1QlcqcThIVFh08N+FhVFcfjejwhl5sq0iw==",
 )
 
 /**

@@ -56,17 +56,17 @@ The companion mobile app **SickTv** (`app.sicktv`) runs directly on your Android
 
 ## Downloads & GitHub Releases
 
-Every push to `main` automatically builds, signs, and publishes the latest APK packages to the repository's [GitHub Releases](https://github.com/Sayan201/CleanYourTv/releases):
+Every push to `main` automatically builds, signs, and publishes the 2 official APK packages to the repository's [GitHub Releases](https://github.com/Sayan201/CleanYourTv/releases):
 
-- **`app-release.apk` / `cleanyourtv-launcher.apk`**: CleanYourTv Launcher for Android TV (`com.sayan.tvhome`).
+- **`launcher.apk`**: CleanYourTv Launcher for Android TV (`com.sayan.tvhome`).
 - **`sicktv-companion.apk`**: SickTv Companion app for Android phones (`app.sicktv`).
-- **`cleanyourtv-standalone.apk`**: Standalone CleanYourTv build (`com.sayan.cleanyourtv`).
 
 ## Useful files
 
 | Path | Purpose |
 |---|---|
 | [launcher/](launcher/) | Android TV launcher source and build scripts |
+| [launcher/companion/](launcher/companion/) | SickTv mobile companion source and device catalog |
 | [launcher/standalone/](launcher/standalone/) | Separate app ID and manifest for the standalone build |
 | [tools/](tools/) | ADB connection, package disable/restore, and theme utilities |
 | [MiTV-AXFR1 package record](examples/xiaomi-mitv-axfr1/observed-state/) | This TV's observed package inventory and notes |
