@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,9 +30,10 @@ final class WeatherClient {
         void onUnavailable();
     }
 
-    private static final double GAYESHPUR_LAT = 22.9585;
-    private static final double GAYESHPUR_LON = 88.4920;
-    private static final long LOCATION_TIMEOUT_MS = 7_000L;
+    private static final double DEFAULT_LAT = 22.9585;
+    private static final double DEFAULT_LON = 88.4920;
+    private static final String DEFAULT_CITY = "Local";
+    private static final long LOCATION_TIMEOUT_MS = 4_000L;
     private final Activity activity;
     private final Handler main = new Handler(Looper.getMainLooper());
     private LocationManager manager;
@@ -44,17 +47,17 @@ final class WeatherClient {
 
     void fetch(boolean useDeviceLocation, Callback callback) {
         cancelLocationRequest();
-        if (!useDeviceLocation || !hasLocationPermission()) {
-            fetchForecast(GAYESHPUR_LAT, GAYESHPUR_LON, "Gayeshpur", callback);
+        if (useDeviceLocation && hasLocationPermission()) {
+            Location cached = newestLastKnown();
+            if (cached != null && System.currentTimeMillis() - cached.getTime() < 12L * 60 * 60 * 1000) {
+                fetchForecastWithResolution(cached.getLatitude(), cached.getLongitude(), null, callback);
+                return;
+            }
+            requestFreshLocation(callback);
             return;
         }
-
-        Location cached = newestLastKnown();
-        if (cached != null && System.currentTimeMillis() - cached.getTime() < 12L * 60 * 60 * 1000) {
-            fetchForecast(cached.getLatitude(), cached.getLongitude(), "Current location", callback);
-            return;
-        }
-        requestFreshLocation(callback);
+        // Fall back directly to IP-based geolocation
+        fetchWithIpFallback(callback);
     }
 
     void close() {
@@ -82,14 +85,14 @@ final class WeatherClient {
 
     private void requestFreshLocation(Callback callback) {
         if (manager == null) {
-            fetchForecast(GAYESHPUR_LAT, GAYESHPUR_LON, "Gayeshpur", callback);
+            fetchWithIpFallback(callback);
             return;
         }
         List<String> providers;
         try {
             providers = manager.getProviders(true);
         } catch (Exception e) {
-            fetchForecast(GAYESHPUR_LAT, GAYESHPUR_LON, "Gayeshpur", callback);
+            fetchWithIpFallback(callback);
             return;
         }
         final boolean[] finished = {false};
@@ -99,7 +102,7 @@ final class WeatherClient {
                 if (finished[0]) return;
                 finished[0] = true;
                 cancelLocationRequest();
-                fetchForecast(location.getLatitude(), location.getLongitude(), "Current location", callback);
+                fetchForecastWithResolution(location.getLatitude(), location.getLongitude(), null, callback);
             }
 
             @Override public void onProviderEnabled(String provider) { }
@@ -116,14 +119,14 @@ final class WeatherClient {
         }
         if (!requested) {
             pendingListener = null;
-            fetchForecast(GAYESHPUR_LAT, GAYESHPUR_LON, "Gayeshpur", callback);
+            fetchWithIpFallback(callback);
             return;
         }
         locationTimeout = () -> {
             if (finished[0]) return;
             finished[0] = true;
             cancelLocationRequest();
-            fetchForecast(GAYESHPUR_LAT, GAYESHPUR_LON, "Gayeshpur", callback);
+            fetchWithIpFallback(callback);
         };
         main.postDelayed(locationTimeout, LOCATION_TIMEOUT_MS);
     }
@@ -140,7 +143,131 @@ final class WeatherClient {
         locationTimeout = null;
     }
 
-    private void fetchForecast(double latitude, double longitude, String locationLabel, Callback callback) {
+    private void fetchWithIpFallback(Callback callback) {
+        Thread worker = new Thread(() -> {
+            LocationResult loc = queryIpLocation();
+            if (loc != null) {
+                fetchForecastInternal(loc.lat, loc.lon, loc.city, callback);
+            } else {
+                fetchForecastInternal(DEFAULT_LAT, DEFAULT_LON, DEFAULT_CITY, callback);
+            }
+        }, "home-weather-ip");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
+    private void fetchForecastWithResolution(double lat, double lon, String cityHint, Callback callback) {
+        Thread worker = new Thread(() -> {
+            String city = cityHint;
+            if (city == null || city.isEmpty()) {
+                city = resolveCity(lat, lon);
+            }
+            if (city == null || city.isEmpty()) {
+                LocationResult ipLoc = queryIpLocation();
+                if (ipLoc != null && ipLoc.city != null && !ipLoc.city.isEmpty()) {
+                    city = ipLoc.city;
+                } else {
+                    city = DEFAULT_CITY;
+                }
+            }
+            fetchForecastInternal(lat, lon, city, callback);
+        }, "home-weather-res");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
+    private static class LocationResult {
+        final double lat;
+        final double lon;
+        final String city;
+
+        LocationResult(double lat, double lon, String city) {
+            this.lat = lat;
+            this.lon = lon;
+            this.city = city;
+        }
+    }
+
+    private static LocationResult queryIpLocation() {
+        LocationResult res = fetchIpWhoIs();
+        if (res != null) return res;
+        return fetchIpApiCo();
+    }
+
+    private static LocationResult fetchIpWhoIs() {
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL("https://ipwho.is/");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(4_000);
+            conn.setReadTimeout(4_000);
+            conn.setRequestProperty("User-Agent", "CleanYourTV-Custom/1.0 (Android TV launcher)");
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) return null;
+            String text = readStream(conn.getInputStream());
+            JSONObject json = new JSONObject(text);
+            if (!json.optBoolean("success", true)) return null;
+            double lat = json.getDouble("latitude");
+            double lon = json.getDouble("longitude");
+            String city = json.optString("city", "").trim();
+            if (city.isEmpty()) city = json.optString("region", "").trim();
+            return new LocationResult(lat, lon, city.isEmpty() ? DEFAULT_CITY : city);
+        } catch (Exception ignored) {
+            return null;
+        } finally {
+            if (conn != null) conn.disconnect();
+        }
+    }
+
+    private static LocationResult fetchIpApiCo() {
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL("https://ipapi.co/json/");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(4_000);
+            conn.setReadTimeout(4_000);
+            conn.setRequestProperty("User-Agent", "CleanYourTV-Custom/1.0 (Android TV launcher)");
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) return null;
+            String text = readStream(conn.getInputStream());
+            JSONObject json = new JSONObject(text);
+            double lat = json.getDouble("latitude");
+            double lon = json.getDouble("longitude");
+            String city = json.optString("city", "").trim();
+            if (city.isEmpty()) city = json.optString("region", "").trim();
+            return new LocationResult(lat, lon, city.isEmpty() ? DEFAULT_CITY : city);
+        } catch (Exception ignored) {
+            return null;
+        } finally {
+            if (conn != null) conn.disconnect();
+        }
+    }
+
+    private String resolveCity(double lat, double lon) {
+        if (activity != null && Geocoder.isPresent()) {
+            try {
+                Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+                if (addresses != null && !addresses.isEmpty()) {
+                    Address a = addresses.get(0);
+                    if (a.getLocality() != null && !a.getLocality().isEmpty()) return a.getLocality();
+                    if (a.getSubAdminArea() != null && !a.getSubAdminArea().isEmpty()) return a.getSubAdminArea();
+                    if (a.getAdminArea() != null && !a.getAdminArea().isEmpty()) return a.getAdminArea();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    private static String readStream(InputStream stream) throws Exception {
+        StringBuilder body = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) body.append(line);
+        }
+        return body.toString();
+    }
+
+    private void fetchForecastInternal(double latitude, double longitude, String locationLabel, Callback callback) {
         Thread worker = new Thread(() -> {
             HttpURLConnection connection = null;
             try {
@@ -152,13 +279,8 @@ final class WeatherClient {
                 connection.setReadTimeout(8_000);
                 connection.setRequestProperty("User-Agent", "CleanYourTV-Custom/1.0 (Android TV launcher)");
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) throw new IllegalStateException("Weather response unavailable");
-                StringBuilder body = new StringBuilder();
-                try (InputStream stream = connection.getInputStream();
-                     BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) body.append(line);
-                }
-                JSONObject current = new JSONObject(body.toString()).getJSONObject("current");
+                String body = readStream(connection.getInputStream());
+                JSONObject current = new JSONObject(body).getJSONObject("current");
                 int degrees = (int) Math.round(current.getDouble("temperature_2m"));
                 String condition = condition(current.getInt("weather_code"));
                 String summary = degrees + "°C  ·  " + condition;

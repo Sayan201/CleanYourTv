@@ -133,6 +133,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView statsMemory;
     private View weatherPill;
     private TextView weatherSummary;
+    private TextView weatherLocation;
     private TextView weatherSource;
     private View mediaInfo;
     private TextView mediaTitle;
@@ -326,6 +327,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         statsMemory = findViewById(R.id.statsMemory);
         weatherPill = findViewById(R.id.weatherPill);
         weatherSummary = findViewById(R.id.weatherSummary);
+        weatherLocation = findViewById(R.id.weatherLocation);
         weatherSource = findViewById(R.id.weatherSource);
         weatherClient = new WeatherClient(this);
         mediaInfo = findViewById(R.id.mediaInfo);
@@ -762,7 +764,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             public void onWeather(String summary, String locationLabel) {
                 if (isFinishing() || isDestroyed()) return;
                 weatherSummary.setText(summary);
-                weatherSource.setText(locationLabel + " · " + getString(R.string.weather_attribution));
+                if (weatherLocation != null) weatherLocation.setText(locationLabel);
+                weatherSource.setText(R.string.weather_attribution);
                 weatherPill.setContentDescription(summary + " in " + locationLabel + ". Select to refresh.");
             }
 
@@ -770,7 +773,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             public void onUnavailable() {
                 if (isFinishing() || isDestroyed()) return;
                 weatherSummary.setText(R.string.weather_unavailable);
-                weatherSource.setText("Gayeshpur · " + getString(R.string.weather_attribution));
+                if (weatherLocation != null) weatherLocation.setText("");
+                weatherSource.setText(R.string.weather_attribution);
                 weatherPill.setContentDescription(getString(R.string.weather_unavailable) + ". Select to retry.");
             }
         });
@@ -1771,6 +1775,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 focusLibrary();
                 return true;
             }
+            int dockLast = Math.min(count, COLUMNS) - 1;
+            // Advance from dock's last app to next row's 1st app when pressing Right
+            if (forward && position < COLUMNS && position == dockLast && count > COLUMNS) {
+                focusTile(COLUMNS);
+                grid.playSoundEffect(SoundEffectConstants.NAVIGATION_RIGHT);
+                return true;
+            }
+            // Return from next row's 1st app back to dock's last app when pressing Left
+            if (!forward && position == COLUMNS && dockLast >= 0) {
+                focusTile(dockLast);
+                grid.playSoundEffect(SoundEffectConstants.NAVIGATION_LEFT);
+                return true;
+            }
             // In the dock, the last app is the row's end: the empty slots after it take no focus.
             int rowCount = position < COLUMNS ? Math.min(count, adapter.dockFilled()) : count;
             return GridNavigation.atHorizontalEdge(position, rowCount, COLUMNS,
@@ -1864,20 +1881,23 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return;
         }
         final int pos = adapter.focusablePosition(Math.max(0, Math.min(position, adapter.appCount() - 1)));
+        grid.smoothScrollToPosition(pos);
         RecyclerView.ViewHolder vh = grid.findViewHolderForAdapterPosition(pos);
         if (vh != null) {
             View card = vh.itemView.findViewById(R.id.card);
-            // Already focused (e.g. back from an app): no focus change fires, so restore the glass by hand.
-            if (card.isFocused()) onTileFocused(pos, card);
-            else card.requestFocus();
+            card.requestFocus();
+            onTileFocused(pos, card);
             return;
         }
-        // Not laid out yet: scroll there, then focus once the scroll settles.
         if (!animations) {
             grid.scrollToPosition(pos);
             grid.post(() -> {
                 RecyclerView.ViewHolder h = grid.findViewHolderForAdapterPosition(pos);
-                if (h != null) h.itemView.findViewById(R.id.card).requestFocus();
+                if (h != null) {
+                    View card = h.itemView.findViewById(R.id.card);
+                    card.requestFocus();
+                    onTileFocused(pos, card);
+                }
             });
             return;
         }
@@ -1889,12 +1909,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 if (pendingFocusScroll != this) return;
                 pendingFocusScroll = null;
                 RecyclerView.ViewHolder h = rv.findViewHolderForAdapterPosition(pos);
-                View target = h != null ? h.itemView.findViewById(R.id.card) : rv.getChildAt(0);
-                if (target != null) target.requestFocus();
+                if (h != null) {
+                    View target = h.itemView.findViewById(R.id.card);
+                    if (target != null) {
+                        target.requestFocus();
+                        onTileFocused(pos, target);
+                    }
+                }
             }
         };
         grid.addOnScrollListener(pendingFocusScroll);
-        grid.smoothScrollToPosition(pos);
     }
 
     // ---- top bar ---------------------------------------------------------------------------------
