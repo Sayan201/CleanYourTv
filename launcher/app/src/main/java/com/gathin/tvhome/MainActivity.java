@@ -13,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -63,6 +64,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,6 +109,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             R.drawable.wallpaper_04, R.drawable.wallpaper_05, R.drawable.wallpaper_06,
             R.drawable.wallpaper_07
     };
+    private static final int[][] PILL_TEXT_STATES = {
+            new int[]{android.R.attr.state_focused},
+            new int[]{}
+    };
+    private static final ColorStateList PILL_TEXT_NORMAL = new ColorStateList(
+            PILL_TEXT_STATES,
+            new int[]{0xFF111111, 0xFFFFFFFF}
+    );
+    private static final ColorStateList PILL_TEXT_DARK = new ColorStateList(
+            PILL_TEXT_STATES,
+            new int[]{0xFFFFFFFF, 0xE61A1A1A}
+    );
     private String liveTvPkg;
     private String liveTvAction;
     private String inputAction;
@@ -143,8 +157,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView mediaNext;
     private MediaController activeMedia;
     private WeatherClient weatherClient;
+    private BingWallpaperClient bingWallpaperClient;
     private ImageView wallpaperView;
     private boolean dailyWallpaperEnabled;
+    private boolean isBrightWallpaperTheme;
     private boolean weatherPermissionRequested;
     private long lastWeatherRequestAt;
     private LocalDate dailyWallpaperDate;
@@ -305,8 +321,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         root = findViewById(R.id.root);
         root.setBackgroundColor(cfg.backgroundColor);
         dailyWallpaperEnabled = cfg.wallpaper == null;
-        if (cfg.wallpaper != null) showWallpaper(cfg.wallpaper);
-        else showDailyWallpaper();
         sky = findViewById(R.id.sky);
         sky.setIntensity(cfg.skyIntensity);
         glass = findViewById(R.id.glass);
@@ -330,6 +344,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         weatherLocation = findViewById(R.id.weatherLocation);
         weatherSource = findViewById(R.id.weatherSource);
         weatherClient = new WeatherClient(this);
+        bingWallpaperClient = new BingWallpaperClient(this);
         mediaInfo = findViewById(R.id.mediaInfo);
         mediaTitle = findViewById(R.id.mediaTitle);
         mediaArtist = findViewById(R.id.mediaArtist);
@@ -591,6 +606,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         }
         if (festive) applyFestiveSkin((TextView) btnInputs, (TextView) btnSettings);
+        if (cfg.wallpaper != null) showWallpaper(cfg.wallpaper);
+        else showDailyWallpaper();
 
         // Hide the glass when focus leaves the tiles.
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalFocusChangeListener((oldF, newF) -> {
@@ -625,21 +642,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /**
-     * A theme's full-screen picture behind everything. Decoded once at the size CENTER_CROP shows, so it
-     * costs a screen-sized bitmap (about 4 MB at 1080p), which is the price of a wallpaper on a 1 GB TV.
-     * A picture over 4K is refused rather than decoded (#166); the plain colour stays.
+     * Decodes a wallpaper file at CENTER_CROP display size in RGB_565 to minimize memory footprint.
      */
-    private void showWallpaper(File file) {
+    private Bitmap decodeWallpaper(File file) {
+        if (file == null || !file.isFile() || file.length() <= 0) return null;
         try {
             android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
             android.graphics.BitmapFactory.Options opts = new android.graphics.BitmapFactory.Options();
             opts.inJustDecodeBounds = true;
             android.graphics.BitmapFactory.decodeFile(file.getPath(), opts);
             int w = opts.outWidth, h = opts.outHeight;
-            if (w <= 0 || h <= 0) return;
+            if (w <= 0 || h <= 0) return null;
             int sample = WallpaperSize.sampleSize(w, h, dm.widthPixels, dm.heightPixels);
-            // The limit applies to what is decoded, so a 12 MP photo still works once it is sampled down.
-            if (!WallpaperSize.accepted(w / sample, h / sample)) return;
+            if (!WallpaperSize.accepted(w / sample, h / sample)) return null;
             opts.inJustDecodeBounds = false;
             opts.inSampleSize = sample;
             int[] scale = WallpaperSize.coverScale(w / sample, h / sample, dm.widthPixels, dm.heightPixels);
@@ -648,19 +663,66 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 opts.inDensity = scale[0];
                 opts.inTargetDensity = scale[1];
             }
-            opts.inPreferredConfig = android.graphics.Bitmap.Config.RGB_565;   // no alpha needed, half the memory
-            android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeFile(file.getPath(), opts);
-            if (bmp == null) return;
-            installWallpaper(bmp);
+            opts.inPreferredConfig = android.graphics.Bitmap.Config.RGB_565; // no alpha needed, half the memory
+            return android.graphics.BitmapFactory.decodeFile(file.getPath(), opts);
         } catch (Exception | OutOfMemoryError e) {
-            // A bad or huge picture must never take the home screen down; the plain colour stays.
+            return null;
         }
     }
 
-    /** A seeded yearly offset gives the seven curated Unsplash pictures a new, non-repeating daily order. */
+    private void showWallpaper(File file) {
+        Bitmap bmp = decodeWallpaper(file);
+        if (bmp != null) installWallpaper(bmp);
+    }
+
+    /**
+     * Loads Bing's daily wallpaper when available, caching today's image locally.
+     * Falls back seamlessly to the curated bundled wallpapers if offline or download fails.
+     */
     private void showDailyWallpaper() {
         LocalDate today = LocalDate.now();
         dailyWallpaperDate = today;
+
+        File cachedBing = BingWallpaperClient.getCachedFile(this);
+        String cachedDate = BingWallpaperClient.getCachedDate(this);
+        boolean isCachedForToday = cachedBing.exists() && cachedBing.length() > 0 && today.toString().equals(cachedDate);
+
+        if (isCachedForToday) {
+            Bitmap bmp = decodeWallpaper(cachedBing);
+            if (bmp != null) {
+                installWallpaper(bmp);
+                return;
+            }
+        }
+
+        // Display current cached or bundled wallpaper first so TV screen is never blank
+        if (cachedBing.exists() && cachedBing.length() > 0) {
+            Bitmap bmp = decodeWallpaper(cachedBing);
+            if (bmp != null) installWallpaper(bmp);
+            else showBundledDailyWallpaper(today);
+        } else {
+            showBundledDailyWallpaper(today);
+        }
+
+        // Fetch today's Bing wallpaper in background
+        if (bingWallpaperClient != null) {
+            bingWallpaperClient.fetch(today, new BingWallpaperClient.Callback() {
+                @Override
+                public void onWallpaperReady(File file) {
+                    if (isFinishing() || isDestroyed() || !dailyWallpaperEnabled) return;
+                    Bitmap bmp = decodeWallpaper(file);
+                    if (bmp != null) installWallpaper(bmp);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    // Keep currently installed wallpaper on network failure
+                }
+            });
+        }
+    }
+
+    private void showBundledDailyWallpaper(LocalDate today) {
         try {
             int yearOffset = new Random(today.getYear() * 97L + 31L).nextInt(DAILY_WALLPAPERS.length);
             int index = Math.floorMod(today.getDayOfYear() - 1 + yearOffset, DAILY_WALLPAPERS.length);
@@ -674,12 +736,144 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void installWallpaper(Bitmap bitmap) {
+        if (bitmap == null) return;
         if (wallpaperView != null) root.removeView(wallpaperView);
         wallpaperView = new ImageView(this);
         wallpaperView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         wallpaperView.setImageBitmap(bitmap);
         root.addView(wallpaperView, 0, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        boolean isBright = isWallpaperTopBright(bitmap);
+        applyWallpaperContrast(isBright);
+    }
+
+    static int calculateLuminance(int r, int g, int b) {
+        return 299 * r + 587 * g + 114 * b;
+    }
+
+    static boolean isLuminanceBright(long avgLum, int brightRatioPercent) {
+        return avgLum > 122_400 || brightRatioPercent > 40;
+    }
+
+    /**
+     * Determines whether the upper region of the wallpaper (where the clock, greeting, date,
+     * weather pill and top buttons sit) is bright/light, requiring dark font contrast.
+     */
+    static boolean isWallpaperTopBright(Bitmap bitmap) {
+        if (bitmap == null || bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0) {
+            return false;
+        }
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int sampleHeight = Math.max(1, (int) (height * 0.38f));
+
+        int stepX = Math.max(1, width / 24);
+        int stepY = Math.max(1, sampleHeight / 24);
+
+        long totalLuminance = 0;
+        int count = 0;
+        int brightPixels = 0;
+
+        for (int y = 0; y < sampleHeight; y += stepY) {
+            for (int x = 0; x < width; x += stepX) {
+                int pixel = bitmap.getPixel(x, y);
+                int r = (pixel >> 16) & 0xff;
+                int g = (pixel >> 8) & 0xff;
+                int b = pixel & 0xff;
+                int lum = calculateLuminance(r, g, b);
+                totalLuminance += lum;
+                if (lum > 140_000) {
+                    brightPixels++;
+                }
+                count++;
+            }
+        }
+
+        if (count == 0) return false;
+        long avgLum = totalLuminance / count;
+        int brightPercent = brightPixels * 100 / count;
+        return isLuminanceBright(avgLum, brightPercent);
+    }
+
+    /**
+     * Adapts font colors, glass pill backgrounds, and icons between crisp white and high-contrast
+     * dark charcoal according to whether the wallpaper background is bright.
+     */
+    private void applyWallpaperContrast(boolean isBright) {
+        isBrightWallpaperTheme = isBright;
+
+        // Clock & Date header elements
+        TextClock clock = findViewById(R.id.clock);
+        if (clock != null) clock.setTextColor(isBright ? 0xFF1A1A1A : 0xFFFFFFFF);
+
+        TextClock ampm = findViewById(R.id.ampm);
+        if (ampm != null) ampm.setTextColor(isBright ? 0xB31A1A1A : 0xB3FFFFFF);
+
+        View clockDivider = findViewById(R.id.clockDivider);
+        if (clockDivider != null) clockDivider.setBackgroundColor(isBright ? 0x331A1A1A : 0x33FFFFFF);
+
+        TextView date = findViewById(R.id.date);
+        if (date != null) date.setTextColor(isBright ? 0xB31A1A1A : 0xA6FFFFFF);
+
+        if (shamsiDate != null) shamsiDate.setTextColor(isBright ? 0xE61A1A1A : 0xE6FFFFFF);
+
+        // Greeting
+        greetingColor = isBright ? 0xB31A1A1A : 0x8CFFFFFF;
+        updateGreeting();
+
+        if (heroName != null) heroName.setTextColor(isBright ? 0xFF1A1A1A : 0xFFFFFFFF);
+
+        // Weather Pill
+        if (weatherPill != null) {
+            weatherPill.setBackgroundResource(isBright ? R.drawable.media_bar_bg_dark : R.drawable.media_bar_bg);
+        }
+        if (weatherSummary != null) weatherSummary.setTextColor(isBright ? 0xFF1A1A1A : 0xFFFFFFFF);
+        if (weatherLocation != null) weatherLocation.setTextColor(isBright ? 0xFF1A1A1A : 0xFFFFFFFF);
+        if (weatherSource != null) weatherSource.setTextColor(isBright ? 0x801A1A1A : 0x80FFFFFF);
+
+        // Media Bar (if active)
+        View mediaBar = findViewById(R.id.mediaBar);
+        if (mediaBar != null) {
+            mediaBar.setBackgroundResource(isBright ? R.drawable.media_bar_bg_dark : R.drawable.media_bar_bg);
+        }
+
+        // Stats pill
+        if (stats != null) {
+            stats.setBackgroundResource(isBright ? R.drawable.pill_bg_dark : R.drawable.pill_bg);
+            if (statsCpu != null) statsCpu.setTextColor(isBright ? 0xE61A1A1A : 0xD9FFFFFF);
+            if (statsMemory != null) statsMemory.setTextColor(isBright ? 0xE61A1A1A : 0xD9FFFFFF);
+            if (stats instanceof ViewGroup) {
+                ViewGroup vg = (ViewGroup) stats;
+                int iconColor = isBright ? 0xE61A1A1A : 0xD9FFFFFF;
+                for (int i = 0; i < vg.getChildCount(); i++) {
+                    View child = vg.getChildAt(i);
+                    if (child instanceof ImageView) {
+                        ((ImageView) child).setImageTintList(ColorStateList.valueOf(iconColor));
+                    }
+                }
+            }
+        }
+
+        // Top Buttons (Inputs, Wi-Fi, Reorder, Settings)
+        View btnInputs = findViewById(R.id.btnInputs);
+        View btnSettings = findViewById(R.id.btnSettings);
+        int pillBgRes = isBright ? R.drawable.pill_bg_dark : R.drawable.pill_bg;
+        ColorStateList textColors = isBright ? PILL_TEXT_DARK : PILL_TEXT_NORMAL;
+
+        View[] topButtons = {btnInputs, btnWifi, btnReorder, btnSettings};
+        for (View btn : topButtons) {
+            if (btn != null) {
+                btn.setBackgroundResource(pillBgRes);
+                if (btn instanceof TextView) {
+                    TextView tv = (TextView) btn;
+                    tv.setTextColor(textColors);
+                    if (!festive) {
+                        tv.setCompoundDrawableTintList(textColors);
+                    }
+                }
+            }
+        }
     }
 
     private boolean hasWeatherLocationPermission() {
@@ -946,6 +1140,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         updateWifiLabel();
         updateInputsButton();
         refreshWeather();
+        if (dailyWallpaperEnabled && (dailyWallpaperDate == null || !dailyWallpaperDate.equals(LocalDate.now()))) showDailyWallpaper();
         refreshMediaBar();
         handler.removeCallbacks(mediaTick);
         handler.postDelayed(mediaTick, 10_000L);
@@ -1077,6 +1272,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onDestroy() {
         super.onDestroy();
         if (weatherClient != null) weatherClient.close();
+        if (bingWallpaperClient != null) bingWallpaperClient.close();
         ConnectivityManager cm = getSystemService(ConnectivityManager.class);
         TvInputManager tim = (TvInputManager) getSystemService(TV_INPUT_SERVICE);
         if (tim != null) tim.unregisterCallback(inputCallback);
