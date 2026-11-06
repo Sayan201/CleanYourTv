@@ -1,4 +1,4 @@
-"""Checks device package lists and the MiTV-AXFR1 project README.
+"""Checks device package lists and the project README.
 
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
@@ -67,10 +67,10 @@ class ExampleListsTest(unittest.TestCase):
                          "examples/README.md rows and examples/ folders differ")
         self.assertEqual(len(listed), len(set(listed)), "a folder is listed twice")
 
-    def test_readme_documents_personalized_device(self):
+    def test_readme_documents_universal_tv(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("CleanYourTV for Xiaomi MiTV-AXFR1", readme)
-        self.assertIn("examples/xiaomi-mitv-axfr1/observed-state/README.md", readme)
+        self.assertIn("CleanYourTV for Android TV & Google TV", readme)
+        self.assertNotIn("Xiaomi MiTV-AXFR1", readme)
 
     @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "counts are fixed up on merge; strict on main only")
     def test_readme_counts(self):

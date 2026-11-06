@@ -1,8 +1,8 @@
-# CleanYourTV for Xiaomi MiTV-AXFR1
+# CleanYourTV for Android TV & Google TV
 
-A personalized Android TV launcher and cleanup setup for my Xiaomi MiTV-AXFR1 (rango), running Android TV 11.
+A clean, customizable, and lightweight home screen launcher and debloating setup for universal Android TV and Google TV devices.
 
-This repository documents the home screen, package state, install steps, and recovery workflow we prepared for this TV. The device-specific files are under [examples/xiaomi-mitv-axfr1/observed-state](examples/xiaomi-mitv-axfr1/observed-state/).
+This repository provides the launcher app, mobile companion installer, package management profiles, and setup guides for universal TV devices. Device-specific debloat profiles and package lists are available under [examples/](examples/).
 
 ## The home screen
 
@@ -33,15 +33,13 @@ The APK is written to `launcher/standalone/build/outputs/apk/release/standalone-
 
 The standalone module shares the existing source and resource directories rather than maintaining a forked copy of the launcher code. Feature fixes made to the shared implementation therefore apply to both packages. The original installation and its package identity remain unchanged.
 
-## MiTV-AXFR1 package record
+## Device debloat and package profiles
 
-The observed state for this TV is documented in [the device profile](examples/xiaomi-mitv-axfr1/observed-state/README.md):
+Device-specific debloat lists and package records are documented in [examples/](examples/):
 
-- debloat.txt lists 22 packages observed disabled for user 0. The stock Android TV launcher is handled separately by the launcher installer.
-- not-installed-user-0.txt lists six packages present in Package Manager's all-packages query but absent from the normal installed list. It is an inventory, not an uninstall script.
-- package-state.md explains the capture, what the list affects, and how to restore the recorded state.
-
-The debloat workflow uses Android's pm disable-user command; it does not uninstall packages. Review the package notes before applying this list to another TV or firmware.
+- `debloat.txt` lists bloatware packages safe to disable for user 0 across 90+ TV models and streaming devices.
+- The debloat workflow uses Android's `pm disable-user` command; it does not uninstall packages, making changes safe and reversible.
+- The **SickTv** companion app reads these curated lists and enables 1-tap debloating directly from your mobile phone.
 
 ## Install on the TV with SickTv Companion
 
@@ -69,16 +67,16 @@ Every push to `main` automatically builds, signs, and publishes the 2 official A
 | [launcher/companion/](launcher/companion/) | SickTv mobile companion source and device catalog |
 | [launcher/standalone/](launcher/standalone/) | Separate app ID and manifest for the standalone build |
 | [tools/](tools/) | ADB connection, package disable/restore, and theme utilities |
-| [MiTV-AXFR1 package record](examples/xiaomi-mitv-axfr1/observed-state/) | This TV's observed package inventory and notes |
+| [Device profiles](examples/) | Curated package debloat inventories and device notes |
 | [Wallpaper credits](docs/wallpaper-sources.md) | Credits for the bundled wallpaper photos |
 | [config.xml](launcher/app/src/main/res/values/config.xml) | Launcher defaults and settings shared by both apps |
 
 ## Privacy and safety
 
-This public repository uses TV_IP placeholders and contains no Wi-Fi name, account data, or signing key. The package record describes one TV and may not match another MiTV-AXFR1 firmware. Review the device profile before using its package list elsewhere.
+This repository contains no private Wi-Fi credentials, personal account data, or private signing keys. Review the device profile in [examples/](examples/) before disabling packages on your TV.
 
-When setup is finished, turn off Network/ADB debugging in the TV's Developer options and revoke debugging authorizations you no longer need. The launcher itself continues to work without ADB.
+When setup is finished, turn off Network/ADB debugging in your TV's Developer options and revoke debugging authorizations you no longer need. The launcher itself continues to work normally without ADB.
 
 ## Project origin
 
-This personalized project is based on [CleanYourTV by Gathin23](https://github.com/Gathin23/cleanyourtv), which is licensed under MIT. The launcher foundation and its license remain here; this README and the MiTV-AXFR1 profile describe the customization for this TV. See [LICENSE](LICENSE).
+This project is based on [CleanYourTV by Gathin23](https://github.com/Gathin23/cleanyourtv), which is licensed under MIT. The launcher foundation and its license remain here; this repository expands it into a universal Android TV & Google TV home screen with the SickTv companion installer. See [LICENSE](LICENSE).
