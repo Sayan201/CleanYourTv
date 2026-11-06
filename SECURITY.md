@@ -15,7 +15,7 @@ the steps to reproduce it, and what an attacker could do with it.
 
 ## What counts
 
-- The launcher (`com.gathin.tvhome.custom`) doing something it shouldn't: reaching the network,
+- The launcher (`com.sayan.tvhome`) doing something it shouldn't: reaching the network,
   exposing data to other apps, or being made to open something it shouldn't. This customized build
   sends approximate coordinates to Open-Meteo for weather; media-session access is opt-in.
 - The tools (`tools/tv.py`, `disable.sh`, `restore.sh`, `theme.sh`, `recovery.py`) running commands

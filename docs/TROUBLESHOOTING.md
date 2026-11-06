@@ -98,9 +98,9 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   If the clock then jumps an hour ahead in spring, a fixed offset keeps it right:
   `tools/tv.py 'cmd alarm set-timezone GMT+03:30'`. The same applies to any country whose rules
   changed after the firmware was built.
-- **The network pill says "Wi-Fi" instead of the network name** after `pm clear com.gathin.tvhome.custom`
+- **The network pill says "Wi-Fi" instead of the network name** after `pm clear com.sayan.tvhome`
   or a reinstall from scratch: clearing the launcher's data also drops the location permission
-  Android 10 needs to read the SSID. `pm grant com.gathin.tvhome.custom android.permission.ACCESS_FINE_LOCATION`
+  Android 10 needs to read the SSID. `pm grant com.sayan.tvhome android.permission.ACCESS_FINE_LOCATION`
   (the install script does this).
 - **Home is "Select a Home app"** after `tools/restore.sh` followed by re-applying a list: disabling a
   package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
@@ -121,11 +121,11 @@ tools/tv.py 'dumpsys accessibility'
 
 | Helper | Component in the enabled-services list | Key it filters |
 | --- | --- | --- |
-| Home button | `com.gathin.tvhome.custom/com.gathin.tvhome.HomeKeyService` | `KEYCODE_ALL_APPS` (not an ordinary `KEYCODE_HOME`) |
-| Input button | `com.gathin.tvhome.custom/com.gathin.tvhome.InputKeyService` | `KEYCODE_TV` |
+| Home button | `com.sayan.tvhome/com.sayan.tvhome.HomeKeyService` | `KEYCODE_ALL_APPS` (not an ordinary `KEYCODE_HOME`) |
+| Input button | `com.sayan.tvhome/com.sayan.tvhome.InputKeyService` | `KEYCODE_TV` |
 
 - **Enabled** means the component is in that user's colon-separated list. Match the full component,
-  for example `com.gathin.tvhome.custom/com.gathin.tvhome.HomeKeyService`.
+  for example `com.sayan.tvhome/com.sayan.tvhome.HomeKeyService`.
 - **Bound** means it appears under that user's `Bound services` section of the dump (`services` on older
   builds). Give it a few seconds after enabling and read again. Labels in the dump can be translated or
   shared with other services; a line containing "Home" is not proof.
@@ -135,9 +135,9 @@ tools/tv.py 'dumpsys accessibility'
 Enabled but never bound points at a firmware restriction on auto-starting sideloaded services (some TCL
 builds log `OP_AUTO_START` denials). Look at `logcat` for the binding failure before changing settings,
 and do not rewrite the enabled-services list or grant app-ops as a blanket fix. On a TCL 55S470G (Google
-TV 12) the line is `[TclAppBoot] ... calleeComponent = 'com.gathin.tvhome.custom/com.gathin.tvhome.HomeKeyService', bootType =
+TV 12) the line is `[TclAppBoot] ... calleeComponent = 'com.sayan.tvhome/com.sayan.tvhome.HomeKeyService', bootType =
 'bind_service', isAllow = 'false', reason = 'callee_does't_have_OP_AUTO_START_permission.'`, and
-`appops get com.gathin.tvhome.custom` shows `APP_AUTO_START: ignore`. Allowing that one op for the launcher only
-(`appops set com.gathin.tvhome.custom APP_AUTO_START allow`) made the service bind on its own after a restart;
+`appops get com.sayan.tvhome` shows `APP_AUTO_START: ignore`. Allowing that one op for the launcher only
+(`appops set com.sayan.tvhome APP_AUTO_START allow`) made the service bind on its own after a restart;
 toggling the service off and on in Accessibility works until the next restart. When reporting, give the
 model, build, current user and the relevant redacted lines, not the raw dump.

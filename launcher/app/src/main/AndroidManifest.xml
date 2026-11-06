@@ -28,7 +28,7 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-            <category android:name="com.gathin.tvhome.category.DOCK_CARD" />
+            <category android:name="com.sayan.tvhome.category.DOCK_CARD" />
         </intent>
         <!-- China-market MIUI TV firmware: the Settings and Wi-Fi pills fall back to Xiaomi's settings app. -->
         <package android:name="com.xiaomi.mitv.settings" />
@@ -100,7 +100,7 @@
         </service>
 
         <!-- Low-power clock screensaver; selected on this custom build as
-             com.gathin.tvhome.custom/com.gathin.tvhome.ClockDream. -->
+             com.sayan.tvhome/com.sayan.tvhome.ClockDream. -->
         <service
             android:name=".ClockDream"
             android:label="@string/dream_name"

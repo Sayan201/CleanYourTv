@@ -15,8 +15,8 @@ TOOLS="$(cd ../tools && pwd)"   # absolute, so the venv's Python doesn't warn ab
 PY=$TOOLS/venv/bin/python
 [ -x "$PY" ] || PY=$TOOLS/venv/Scripts/python.exe
 export MSYS_NO_PATHCONV=1
-APP_ID=com.gathin.tvhome.custom
-MAIN_COMPONENT=$APP_ID/com.gathin.tvhome.MainActivity
+APP_ID=com.sayan.tvhome
+MAIN_COMPONENT=$APP_ID/com.sayan.tvhome.MainActivity
 # Which app owns Home differs by build (com.google.android.tvlauncher on Android TV,
 # com.google.android.apps.tv.launcherx on newer Google TV), so ask the TV instead of guessing.
 # Only a launcher we recognise is accepted: the answer can also be Android's chooser ("android"),
@@ -154,7 +154,7 @@ esac
 #   HOME_KEY_SERVICE=1    remotes whose Home button sends KEYCODE_ALL_APPS instead of HOME, e.g. Xiaomi
 #                         sticks: the key is routed to the launcher (HomeKeyService)
 enable_service() {   # appends to enabled_accessibility_services without dropping other services
-  svc=$APP_ID/com.gathin.tvhome.$1
+  svc=$APP_ID/com.sayan.tvhome.$1
   "$PY" -I ../tools/tv.py "s=\$(settings get secure enabled_accessibility_services); case \"\$s\" in *$1*) ;; null|'') settings put secure enabled_accessibility_services $svc ;; *) settings put secure enabled_accessibility_services \"\$s:$svc\" ;; esac; settings put secure accessibility_enabled 1; echo $1 enabled"
 }
 if [ "${INPUT_KEY_SERVICE:-0}" = 1 ]; then enable_service InputKeyService; fi

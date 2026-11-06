@@ -24,7 +24,7 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.MAIN" />
-            <category android:name="com.gathin.tvhome.category.DOCK_CARD" />
+            <category android:name="com.sayan.tvhome.category.DOCK_CARD" />
         </intent>
         <package android:name="com.xiaomi.mitv.settings" />
     </queries>

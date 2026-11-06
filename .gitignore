@@ -4,6 +4,7 @@ __pycache__/
 launcher/.gradle/
 launcher/build/
 launcher/app/build/
+launcher/standalone/build/
 launcher/local.properties
 # Local workspace, dumps and generated scratch files.
 work/

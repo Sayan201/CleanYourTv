@@ -13,8 +13,8 @@ param(
     [switch]$HomeKeyService
 )
 $ErrorActionPreference = 'Stop'
-$appId = 'com.gathin.tvhome.custom'
-$mainComponent = "$appId/com.gathin.tvhome.MainActivity"
+$appId = 'com.sayan.tvhome'
+$mainComponent = "$appId/com.sayan.tvhome.MainActivity"
 # Pipe plain UTF-8 to native commands; the default here prepends a BOM that corrupts the first command.
 $OutputEncoding = New-Object System.Text.UTF8Encoding $false
 if (-not $TvHost) { throw 'pass -TvHost <tv ip> or set $env:TV_HOST' }
@@ -93,7 +93,7 @@ if ($homeNow -notlike "$appId/*") {
 Write-Host "Home now resolves to $homeNow"
 # Optional accessibility services, appended to enabled_accessibility_services without dropping others.
 function Enable-Service([string]$Name) {
-    $svc = "$appId/com.gathin.tvhome.$Name"
+    $svc = "$appId/com.sayan.tvhome.$Name"
     # Through stdin: Windows PowerShell 5.1 drops the inner double quotes from a native argument, and the
     # TV's shell then fails with "no closing quote" while the service stays off.
     ('s=$(settings get secure enabled_accessibility_services); case "$s" in *' + $Name + '*) ;; null|"") settings put secure enabled_accessibility_services ' + $svc + ' ;; *) settings put secure enabled_accessibility_services "$s:' + $svc + '" ;; esac; settings put secure accessibility_enabled 1; echo ' + $Name + ' enabled') |

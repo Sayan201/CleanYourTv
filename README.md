@@ -16,7 +16,7 @@ This repository documents the home screen, package state, install steps, and rec
 - **A lightweight clock screensaver.** It uses a black background and slowly moves the clock to reduce burn-in.
 - **Remote navigation fixes.** Pressing Right on the dock's last app automatically wraps to the next row, and focus stays within the correct home-screen row.
 
-The original customized launcher is the native Android app in the `launcher` folder, with application ID `com.gathin.tvhome.custom`.
+The original customized launcher is the native Android app in the `launcher` folder, with application ID `com.sayan.tvhome`.
 
 ## Standalone CleanYourTV application
 

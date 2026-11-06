@@ -3,12 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.gathin.tvhome'
+    namespace 'com.sayan.tvhome'
     compileSdk 34
 
     defaultConfig {
-        // Keep the user's original non-debuggable CleanYourTV install as a rollback option.
-        applicationId 'com.gathin.tvhome.custom'
+        applicationId 'com.sayan.tvhome'
         minSdk 26
         targetSdk 34
         versionCode 5
