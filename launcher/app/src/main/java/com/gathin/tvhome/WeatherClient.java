@@ -30,9 +30,6 @@ final class WeatherClient {
         void onUnavailable();
     }
 
-    private static final double DEFAULT_LAT = 22.9585;
-    private static final double DEFAULT_LON = 88.4920;
-    private static final String DEFAULT_CITY = "Local";
     private static final long LOCATION_TIMEOUT_MS = 4_000L;
     private final Activity activity;
     private final Handler main = new Handler(Looper.getMainLooper());
@@ -149,7 +146,7 @@ final class WeatherClient {
             if (loc != null) {
                 fetchForecastInternal(loc.lat, loc.lon, loc.city, callback);
             } else {
-                fetchForecastInternal(DEFAULT_LAT, DEFAULT_LON, DEFAULT_CITY, callback);
+                main.post(callback::onUnavailable);
             }
         }, "home-weather-ip");
         worker.setDaemon(true);
@@ -166,11 +163,9 @@ final class WeatherClient {
                 LocationResult ipLoc = queryIpLocation();
                 if (ipLoc != null && ipLoc.city != null && !ipLoc.city.isEmpty()) {
                     city = ipLoc.city;
-                } else {
-                    city = DEFAULT_CITY;
                 }
             }
-            fetchForecastInternal(lat, lon, city, callback);
+            fetchForecastInternal(lat, lon, city != null ? city : "", callback);
         }, "home-weather-res");
         worker.setDaemon(true);
         worker.start();
@@ -210,7 +205,7 @@ final class WeatherClient {
             double lon = json.getDouble("longitude");
             String city = json.optString("city", "").trim();
             if (city.isEmpty()) city = json.optString("region", "").trim();
-            return new LocationResult(lat, lon, city.isEmpty() ? DEFAULT_CITY : city);
+            return new LocationResult(lat, lon, city);
         } catch (Exception ignored) {
             return null;
         } finally {
@@ -233,7 +228,7 @@ final class WeatherClient {
             double lon = json.getDouble("longitude");
             String city = json.optString("city", "").trim();
             if (city.isEmpty()) city = json.optString("region", "").trim();
-            return new LocationResult(lat, lon, city.isEmpty() ? DEFAULT_CITY : city);
+            return new LocationResult(lat, lon, city);
         } catch (Exception ignored) {
             return null;
         } finally {

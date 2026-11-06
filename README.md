@@ -8,13 +8,13 @@ This repository documents the home screen, package state, install steps, and rec
 
 - **Five app slots in the dock.** It fills from apps installed on the TV. Long-press an app to move it left or right, or open its App info.
 - **Seven scenic wallpapers.** Bundled Unsplash photos rotate daily; the image credits are in [docs/wallpaper-sources.md](docs/wallpaper-sources.md).
-- **Greeting, clock, and weather.** Weather is shown in Celsius using approximate device location and Open-Meteo, with Gayeshpur, West Bengal as the fallback.
-- **Media controls below the clock.** Previous, play/pause, and next controls follow the active media session. Android notification access is needed for session information.
+- **Greeting, clock, and weather.** Weather is shown in Celsius using approximate device location and Open-Meteo, with automatic IP-based geolocation fallback.
+- **A wide weather bar below the clock.** Displays live temperature and condition on the left, with local city name and source on the right.
 - **A combined CPU and memory tile.** One translucent button-style tile shows both usage percentages immediately to the left of Inputs.
 - **Inputs, Wi-Fi, and Settings tiles.** The Wi-Fi tile shows the connected network name when Android grants location access.
-- **A transparent first app row** matching the rows below it.
+- **A macOS-style liquid glass capsule first app row.**
 - **A lightweight clock screensaver.** It uses a black background and slowly moves the clock to reduce burn-in.
-- **Remote navigation fixes.** Up from the dock can reach the media controls, and focus stays within the correct home-screen row.
+- **Remote navigation fixes.** Pressing Right on the dock's last app automatically wraps to the next row, and focus stays within the correct home-screen row.
 
 The original customized launcher is the native Android app in the `launcher` folder, with application ID `com.gathin.tvhome.custom`.
 
