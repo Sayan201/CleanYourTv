@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static final long WEATHER_REFRESH_MS = 30L * 60 * 1000;
     private static final int WEATHER_LOCATION_REQUEST = 713;
     private static final int WIFI_SSID_LOCATION_REQUEST = 714;
-    private static final int[] DAILY_WALLPAPERS = {
+    static final int[] DAILY_WALLPAPERS = {
             R.drawable.wallpaper_01, R.drawable.wallpaper_02, R.drawable.wallpaper_03,
             R.drawable.wallpaper_04, R.drawable.wallpaper_05, R.drawable.wallpaper_06,
             R.drawable.wallpaper_07

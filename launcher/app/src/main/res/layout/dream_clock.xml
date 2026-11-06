@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Low-power ClockDream: a dim clock on black, with no image or animated background. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF000000">
 
+    <ImageView
+        android:id="@+id/dreamWallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
+
+    <View
+        android:id="@+id/dreamScrim"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/scrim_bottom" />
+
     <LinearLayout
         android:id="@+id/dreamContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="64dp"
+        android:layout_marginBottom="48dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -18,40 +34,57 @@
             android:baselineAligned="true">
 
             <TextClock
+                android:id="@+id/dreamClock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:format12Hour="h:mm"
                 android:format24Hour="HH:mm"
-                android:textColor="#80FFFFFF"
-                android:textSize="88sp"
-                android:fontFamily="sans-serif-light"
+                android:textColor="#FFFFFFFF"
+                android:textSize="92sp"
+                android:fontFamily="@font/outfit_light"
                 android:letterSpacing="-0.04"
-                android:includeFontPadding="false" />
+                android:includeFontPadding="false"
+                android:shadowColor="#B3000000"
+                android:shadowRadius="12"
+                android:shadowDy="2"
+                android:shadowDx="0" />
 
             <TextClock
+                android:id="@+id/dreamAmPm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="16dp"
                 android:format12Hour="a"
                 android:format24Hour=""
-                android:textColor="#66FFFFFF"
-                android:textSize="16sp"
-                android:fontFamily="sans-serif-medium"
+                android:textColor="#CCFFFFFF"
+                android:textSize="18sp"
+                android:fontFamily="@font/outfit_medium"
                 android:letterSpacing="0.08"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:shadowColor="#B3000000"
+                android:shadowRadius="8"
+                android:shadowDy="2"
+                android:shadowDx="0" />
         </LinearLayout>
 
         <TextClock
+            android:id="@+id/dreamDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
             android:format12Hour="@string/date_format"
             android:format24Hour="@string/date_format"
-            android:textColor="#55FFFFFF"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif"
-            android:letterSpacing="0.14"
-            android:textAllCaps="true" />
+            android:textColor="#E6FFFFFF"
+            android:textSize="18sp"
+            android:fontFamily="@font/outfit_regular"
+            android:letterSpacing="0.12"
+            android:textAllCaps="true"
+            android:shadowColor="#B3000000"
+            android:shadowRadius="8"
+            android:shadowDy="2"
+            android:shadowDx="0" />
     </LinearLayout>
 </FrameLayout>

@@ -49,4 +49,9 @@ public class WallpaperContrastTest {
         // Average low and ratio low: stays normal
         assertFalse(MainActivity.isLuminanceBright(90_000, 20));
     }
+
+    @Test
+    public void dailyWallpapersExistForFallback() {
+        assertTrue(MainActivity.DAILY_WALLPAPERS.length >= 7);
+    }
 }
