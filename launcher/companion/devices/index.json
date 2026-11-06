@@ -1,0 +1,1157 @@
+{
+  "schema": 1,
+  "source": {
+    "repo": "Gathin23/cleanyourtv",
+    "commit": "0c5ffc72be60f67fca2682528d59313632dcff27"
+  },
+  "devices": [
+    {
+      "id": "aipro2k",
+      "name": "AiPro2K",
+      "match": null,
+      "sdk": null,
+      "file": "devices/aipro2k.json",
+      "sha256": "b0146fa9346033591b089d5d928f3bb079cb50232ae20bfb6353bbdce5a4108d"
+    },
+    {
+      "id": "amazon-fire-tv-stick-4k-2018",
+      "name": "Amazon Fire TV Stick 4K",
+      "match": null,
+      "sdk": 25,
+      "file": "devices/amazon-fire-tv-stick-4k-2018.json",
+      "sha256": "56949f3f65411d7fa2a14b567975a8c77646d1083c34cc23fe21da425d266471"
+    },
+    {
+      "id": "benq-e55-735",
+      "name": "BenQ E55-735",
+      "match": null,
+      "sdk": null,
+      "file": "devices/benq-e55-735.json",
+      "sha256": "80996f52d8adfd097395d29c2c6d0a17526888956bf4cb84dd8d8cbec9b12287"
+    },
+    {
+      "id": "benq-e55-750",
+      "name": "BenQ E55-750",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/benq-e55-750.json",
+      "sha256": "1a9ffe6039830062d1ee9efc56cf4fba3550ff1b89a8f8aeec512937c29fe239"
+    },
+    {
+      "id": "chiq-ai-pont",
+      "name": "CHiQ \"AI PONT\"",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/chiq-ai-pont.json",
+      "sha256": "d07fd480e4e98991ab68d19b9f2af6de7ed80e74e10f73165223008fd58eccad"
+    },
+    {
+      "id": "chiq-gtvu65",
+      "name": "CHiQ \"AI PONT\"",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/chiq-gtvu65.json",
+      "sha256": "2610fb078a3e5e6c266690e69cafec78672a3d5834ea1b4839c557b129aa21cd"
+    },
+    {
+      "id": "google-chromecast-gtv-4k",
+      "name": "Chromecast with Google TV 4K",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/google-chromecast-gtv-4k.json",
+      "sha256": "1f45601a955c7c8821a6463a734d23a8098000fca3ef68f2f18e29f3fe515b01"
+    },
+    {
+      "id": "haier-android-tv-dvb2k",
+      "name": "Haier Android TV DVB2K",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/haier-android-tv-dvb2k.json",
+      "sha256": "d5bd974a4134aeec03a1e0d4929f2fc2a03008f65382d4c4205626a4736646a3"
+    },
+    {
+      "id": "haier-h32s80efx",
+      "name": "Haier H32S80EFX",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/haier-h32s80efx.json",
+      "sha256": "97892916ef80366b2e66c6344e09ef8c83956a5046b78ba863adede51a47ecb8"
+    },
+    {
+      "id": "hisense-hg9",
+      "name": "Hisense HG9",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/hisense-hg9.json",
+      "sha256": "4f5ff9525b278e949a2dd326ccd1d08c632373a0f80c8816e1dcff8b52c78c04"
+    },
+    {
+      "id": "hisense-hismarttv-a4-android11",
+      "name": "Hisense HiSmartTV A4",
+      "match": null,
+      "sdk": null,
+      "file": "devices/hisense-hismarttv-a4-android11.json",
+      "sha256": "03a2a4ac0ca47feb0e83c9ec327da11ce9c7123108fac78e46b519967c51d7d3"
+    },
+    {
+      "id": "hisense-hismarttv-a4",
+      "name": "Hisense HiSmartTV A4",
+      "match": null,
+      "sdk": null,
+      "file": "devices/hisense-hismarttv-a4.json",
+      "sha256": "13724bf68bdaa5b259ad04bd1a7e4b83c1c4a96f50997d8763d0441fb2f1f352"
+    },
+    {
+      "id": "hisense-smarttv-4k-ffm",
+      "name": "Hisense SmartTV 4K FFM",
+      "match": null,
+      "sdk": null,
+      "file": "devices/hisense-smarttv-4k-ffm.json",
+      "sha256": "82c5245081e8f73da09cd90744a4d10d6b60502367eef6dd7ff035cefbcb74a4"
+    },
+    {
+      "id": "hisense-u75-hengshan",
+      "name": "Hisense U75",
+      "match": null,
+      "sdk": null,
+      "file": "devices/hisense-u75-hengshan.json",
+      "sha256": "547a3eef4525ee8549349d22b76f0ebb2653e83edda4f39d820360ea01770bb5"
+    },
+    {
+      "id": "hitachi-65qledsm20",
+      "name": "Hitachi 65QLEDSM20",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/hitachi-65qledsm20.json",
+      "sha256": "f7e9c8088031845eacf3e5b9b137ec06cf7af423558898834a185c943fee19e0"
+    },
+    {
+      "id": "hitachi-cdh-le32smart21",
+      "name": "Hitachi CDH-LE32SMART21",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/hitachi-cdh-le32smart21.json",
+      "sha256": "ad4a2380b3ac18eff293763b95d3f7e6ac4e952a111eaae0a1700d3969a57bdb"
+    },
+    {
+      "id": "insignia-ns55f301na25",
+      "name": "Insignia 55\" Class F30 4K Fire TV",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/insignia-ns55f301na25.json",
+      "sha256": "991e2917523a3b5558135b7ce1acfb1e6e2ab1c1e06bc43844497c548a1e3b51"
+    },
+    {
+      "id": "jmgo-n1s-holan",
+      "name": "JMGO N1S projector",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/jmgo-n1s-holan.json",
+      "sha256": "74664e038e16e5eb4bf3877672626b7818c39591338505736afc1da3de3ef2e8"
+    },
+    {
+      "id": "kalley-r10g",
+      "name": "Kalley R10G",
+      "match": null,
+      "sdk": null,
+      "file": "devices/kalley-r10g.json",
+      "sha256": "134edaa3eff0c80c866520732de24d671a6d589b356e8b66d84a500bc5c71c10"
+    },
+    {
+      "id": "nvidia-shield-tv-2019",
+      "name": "NVIDIA SHIELD TV 2019 tube",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/nvidia-shield-tv-2019.json",
+      "sha256": "de8c56f32e3f9da504f97349c3842a6aca64c2d5aa41915222f98c3a7f6ecbd2"
+    },
+    {
+      "id": "nvidia-shield-tv-pro-2019",
+      "name": "NVIDIA SHIELD TV Pro",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/nvidia-shield-tv-pro-2019.json",
+      "sha256": "595812c35b7f198fae50863ebd3b3db09cdb63cfd9e65f8ae385da6fd690f4ff"
+    },
+    {
+      "id": "oneplus-tv-dubai",
+      "name": "OnePlus TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/oneplus-tv-dubai.json",
+      "sha256": "4cfcb8aa8dd5b8ce86b5a8b69edc76f12423739028ea87d0ce5933d3f4d93ba9"
+    },
+    {
+      "id": "onn-4k-streaming-box-2023",
+      "name": "onn 4K Streaming Box",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/onn-4k-streaming-box-2023.json",
+      "sha256": "e11b2f62875c8f2daf28a2b8d8a3e198470be817dfc6da332434ae535489ee94"
+    },
+    {
+      "id": "panasonic-4ktv-jup",
+      "name": "Panasonic 4KTV-JUP",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/panasonic-4ktv-jup.json",
+      "sha256": "44535f0da698ae749572b0c441ea2266a00f70f4aa78b7adbd2762869f3fafe9"
+    },
+    {
+      "id": "panasonic-th-40hs550k",
+      "name": "Panasonic TH-40HS550K",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/panasonic-th-40hs550k.json",
+      "sha256": "4d7e5ca22e46aa3461872fe5e6b67826f7d4288156667db935ba46a31d0edb55"
+    },
+    {
+      "id": "philips-50pus8517",
+      "name": "Philips 50PUS8517/12",
+      "match": null,
+      "sdk": null,
+      "file": "devices/philips-50pus8517.json",
+      "sha256": "445dfbcfaa2d89d30170829f1f0b3caa0428f81d88b603a4715050c07ff65011"
+    },
+    {
+      "id": "philips-55oled707",
+      "name": "Philips 55OLED707/12",
+      "match": null,
+      "sdk": null,
+      "file": "devices/philips-55oled707.json",
+      "sha256": "1e893a88608b0684e99de9ef07cae8e8eda12413dce5892f36aa98bec337bcc2"
+    },
+    {
+      "id": "philips-55pus7503",
+      "name": "Philips 55PUS7503/12",
+      "match": null,
+      "sdk": 26,
+      "file": "devices/philips-55pus7503.json",
+      "sha256": "8adcea92b2af7b10057dee6b9d27b38a1902a014e7779d8a8e88d3c12468e2ab"
+    },
+    {
+      "id": "philips-65pus8102",
+      "name": "Philips 65PUS8102/12",
+      "match": null,
+      "sdk": 26,
+      "file": "devices/philips-65pus8102.json",
+      "sha256": "3fe700ea3999fd82ee1c37cb91c0cc2103830184514339274f9d22278fa59b5a"
+    },
+    {
+      "id": "philips-r8g-google-tv",
+      "name": "Philips R8G Google TV",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/philips-r8g-google-tv.json",
+      "sha256": "0f3653258bb6b171d38661747d75aa9f9ae3ca57e44635ef9e65728c4e18bee1"
+    },
+    {
+      "id": "philips-smart-4k-google-tv",
+      "name": "Philips Smart 4K TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/philips-smart-4k-google-tv.json",
+      "sha256": "9d9b78b8648f56ee709e0d5c9bb99ebd2fc74036383c3b102e40e63055ac938f"
+    },
+    {
+      "id": "portronics-beem-470",
+      "name": "Portronics Beem 470 Smart LED Projector",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/portronics-beem-470.json",
+      "sha256": "ec29a34c11ad80836fc7dab0d056ae7defecccdc3a7f78307272fa198ad0fbc1"
+    },
+    {
+      "id": "prismplus-q65-ultra-r10g",
+      "name": "PRISM+ Q65 Ultra 2026 QLED 4K AI Google TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/prismplus-q65-ultra-r10g.json",
+      "sha256": "184a18af3fba9699558da471b4e2f056ba9d0c91a660c1cf1b3484b82e35cbb7"
+    },
+    {
+      "id": "rca-ai-pont",
+      "name": "RCA AI PONT SA",
+      "match": null,
+      "sdk": null,
+      "file": "devices/rca-ai-pont.json",
+      "sha256": "cb9559e6de35b0ed845017f564065d7d16f5c0063738ecfe9edf2e5c3eb49861"
+    },
+    {
+      "id": "redmi-mitv-antl0",
+      "name": "Redmi TV",
+      "match": null,
+      "sdk": 22,
+      "file": "devices/redmi-mitv-antl0.json",
+      "sha256": "c1b9d77795638f90d3de74b88cd4806925b2f7e337874ba63985dfd05aca4edb"
+    },
+    {
+      "id": "sanyo-atv-r2",
+      "name": "SANYO ATV R2",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/sanyo-atv-r2.json",
+      "sha256": "fd68b84c0a64fed3b7ec3d0d97b0b8340662dc04142306ce288cd6fb511dc077"
+    },
+    {
+      "id": "skyworth-swtv-21ae",
+      "name": "Skyworth SWTV-21AE",
+      "match": null,
+      "sdk": null,
+      "file": "devices/skyworth-swtv-21ae.json",
+      "sha256": "e1d901f765b2406a6d6c98fad4312cbabe0150aed8a25663e98b98e0933ca380"
+    },
+    {
+      "id": "skyworth-swtv-24na-4k-nf",
+      "name": "Skyworth SWTV-24NA-4K NF",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/skyworth-swtv-24na-4k-nf.json",
+      "sha256": "ac2d3a96cc13c8bf15cbeb4571eb5934528a0ccf2fd3240fc29bd5e4c0f4af03"
+    },
+    {
+      "id": "sony-bravia-4k-gb-us",
+      "name": "Sony BRAVIA 4K GB",
+      "match": null,
+      "sdk": null,
+      "file": "devices/sony-bravia-4k-gb-us.json",
+      "sha256": "9f2bde038f239ecbc3c37dd00d51d157dd98ed0c30ebe9a9d5cf1d6bb7844bab"
+    },
+    {
+      "id": "sony-bravia-4k-gb",
+      "name": "Sony BRAVIA 4K GB",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/sony-bravia-4k-gb.json",
+      "sha256": "c73ab33df42f11056e7c0f4d4b6f4dc3fdc33bb0e0b49a0fa2c5f630da94acbd"
+    },
+    {
+      "id": "sony-bravia-4k-ur2",
+      "name": "Sony BRAVIA 4K UR2",
+      "match": null,
+      "sdk": 29,
+      "file": "devices/sony-bravia-4k-ur2.json",
+      "sha256": "9f265a8302d271e6c1dada17f7a4dd185ed20a436852a983b4ccfad041d36651"
+    },
+    {
+      "id": "sony-bravia-4k-vh2",
+      "name": "Sony BRAVIA 4K VH2",
+      "match": null,
+      "sdk": 31,
+      "file": "devices/sony-bravia-4k-vh2.json",
+      "sha256": "6688d050211352bb01e875633ce139157b10dee31c7ce189a011d4c171b10c4e"
+    },
+    {
+      "id": "sony-bravia-4k-vh21",
+      "name": "Sony BRAVIA 4K VH21",
+      "match": null,
+      "sdk": 31,
+      "file": "devices/sony-bravia-4k-vh21.json",
+      "sha256": "e3c028d71ee0ba5b08b293536fa833fd0ef5771614718967f5e54b574e33e700"
+    },
+    {
+      "id": "sony-bravia-9-ii",
+      "name": "Sony BRAVIA 9 II",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/sony-bravia-9-ii.json",
+      "sha256": "d88bb3847c9834a3416a35f549c7a9b96bffb28e88e8664f9e44e26ed8f1a106"
+    },
+    {
+      "id": "sony-bravia-ae2",
+      "name": "Sony BRAVIA 4K AE2",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/sony-bravia-ae2.json",
+      "sha256": "feb5a202a938f00dff7e4a3fd65e13d0ec770e6c89819e287c2414390299083e"
+    },
+    {
+      "id": "sony-bravia-bf1",
+      "name": "Sony BRAVIA BF1",
+      "match": null,
+      "sdk": 31,
+      "file": "devices/sony-bravia-bf1.json",
+      "sha256": "92e42bbc15e0a56bbc6b268368ca52f218c714dd4f3e115f5be8ef7493b940bc"
+    },
+    {
+      "id": "sony-bravia-tl2",
+      "name": "Sony BRAVIA TL2",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/sony-bravia-tl2.json",
+      "sha256": "ce8fa89fde2717b53420fb55fb60860654ef68564613f52688d69bf4a45bb5fc"
+    },
+    {
+      "id": "sony-bravia-vu31",
+      "name": "Sony BRAVIA VU31 4K",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/sony-bravia-vu31.json",
+      "sha256": "7e0207915156d2abd31ae6a1e9add8ebf524891f2c3ff7bae3bce5d2a42d2e63"
+    },
+    {
+      "id": "sony-kd-55x8509c",
+      "name": "Sony BRAVIA KD-55X8509C",
+      "match": null,
+      "sdk": 24,
+      "file": "devices/sony-kd-55x8509c.json",
+      "sha256": "5b4ee939cc6b7359dc44985b2b174f6e564df6e86d6e1cb7194498a138a8c598"
+    },
+    {
+      "id": "sony-kd-55x85j",
+      "name": "Sony BRAVIA KD-55X85J",
+      "match": null,
+      "sdk": 31,
+      "file": "devices/sony-kd-55x85j.json",
+      "sha256": "a42cda2656d85ad0c416c505015e736256c63c9973e6f5f725f2d85651eedf06"
+    },
+    {
+      "id": "sony-kd-65x80j",
+      "name": "Sony BRAVIA KD-65X80J",
+      "match": null,
+      "sdk": 29,
+      "file": "devices/sony-kd-65x80j.json",
+      "sha256": "15eb142efcafddd4ababd6cdf171d8f6f52333a351683a9138c1cbd8777b900f"
+    },
+    {
+      "id": "sony-kd-65x9300d",
+      "name": "Sony BRAVIA KD-65X9300D",
+      "match": null,
+      "sdk": null,
+      "file": "devices/sony-kd-65x9300d.json",
+      "sha256": "3ffd18e541ee4743aff56a874a52bafe51822cb7d5466d05af9cb2f2f9988981"
+    },
+    {
+      "id": "sony-xbr-65x900f",
+      "name": "Sony BRAVIA XBR-65X900F",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/sony-xbr-65x900f.json",
+      "sha256": "fdeff94929caac149da14d18baf515ac48293d752ea0e9570e229d8856c90d0b"
+    },
+    {
+      "id": "sony-xbr-x900e",
+      "name": "Sony BRAVIA XBR-65X900E",
+      "match": null,
+      "sdk": null,
+      "file": "devices/sony-xbr-x900e.json",
+      "sha256": "c031fcf310d8bc1c8479466a3b4ed0dcb71b69bcf88fd9d9ef7047d19c8a62b5"
+    },
+    {
+      "id": "stellamore-t950s",
+      "name": "Stellamore T950S projector",
+      "match": null,
+      "sdk": 33,
+      "file": "devices/stellamore-t950s.json",
+      "sha256": "c3c72d31609234f7c6cf75de4d85d97ac7a25f06327eadcd78d0e6985fed8e68"
+    },
+    {
+      "id": "tcl-40s5400a",
+      "name": "TCL 40S5400A",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-40s5400a.json",
+      "sha256": "4a14618fbb21489e78110615b0b07ada0eb737a8241051fe6efe7c3b723a1a0b"
+    },
+    {
+      "id": "tcl-43c645",
+      "name": "TCL 43C645",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-43c645.json",
+      "sha256": "f281f511c294e1dae40d7eabb98bd866182487a0fc5c90c93c527517a61fdd12"
+    },
+    {
+      "id": "tcl-43ep660",
+      "name": "TCL 43EP660",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/tcl-43ep660.json",
+      "sha256": "fe879ecb66b9eee9d7fdc961bfd0cf16a02de41b25cfa8ac0b588081a69cde84"
+    },
+    {
+      "id": "tcl-50ep680",
+      "name": "TCL 50EP680",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-50ep680.json",
+      "sha256": "a9a7674868f32b74d26f2ea9d3e3084ec1acaa13655c4935af52a90972fe21b8"
+    },
+    {
+      "id": "tcl-55s470g",
+      "name": "TCL 55S470G",
+      "match": null,
+      "sdk": null,
+      "file": "devices/tcl-55s470g.json",
+      "sha256": "6182eff2fd21eb3175eacc5ff836aa1647f3d53713df818f14fbead228d619c5"
+    },
+    {
+      "id": "tcl-65c725",
+      "name": "TCL 65C725",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-65c725.json",
+      "sha256": "c9741975abed3c3f75be36cd115abba760719e7a81b1bf57789b85d90f2125cf"
+    },
+    {
+      "id": "tcl-65c735",
+      "name": "TCL 65C735",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-65c735.json",
+      "sha256": "bf5a4f3239afb3e900ed69e40f817585092f4dd8d6ba5accf157e56129ace754"
+    },
+    {
+      "id": "tcl-ak30a5",
+      "name": "TCL ak30a5 — Chinese-market TCL Android TV 9",
+      "match": null,
+      "sdk": null,
+      "file": "devices/tcl-ak30a5.json",
+      "sha256": "6a6aad2a7f9920e1a917bcf177a0ca246190936a3c7b0143b8fcb6689bd31918"
+    },
+    {
+      "id": "tcl-beyondtv-rt2851",
+      "name": "TCL BeyondTV",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/tcl-beyondtv-rt2851.json",
+      "sha256": "50347ecf6f7be49723e30418aadc2001cb6588c1e9770afa5b83bf871692d9a0"
+    },
+    {
+      "id": "tcl-beyondtv",
+      "name": "TCL BeyondTV",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/tcl-beyondtv.json",
+      "sha256": "3786366c9978c3dc1cffa3bae362854bf72c53deea8d482dc225e93f92ec86be"
+    },
+    {
+      "id": "tcl-beyondtv2-latin-america",
+      "name": "TCL BeyondTV2",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/tcl-beyondtv2-latin-america.json",
+      "sha256": "c2576c0fdc37dc534c8f517b369dd616281e8cf6e5d1dee11ab064206f76b7eb"
+    },
+    {
+      "id": "tcl-c755-google-tv",
+      "name": "TCL 75\" C755 QD-Mini LED Google TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/tcl-c755-google-tv.json",
+      "sha256": "1b060ab1b3e6c01c99ebaf861fa748eb488a12d337f31c51e5b9e39b3a952f2c"
+    },
+    {
+      "id": "tcl-g05-google-tv",
+      "name": "TCL Smart TV Pro",
+      "match": null,
+      "sdk": null,
+      "file": "devices/tcl-g05-google-tv.json",
+      "sha256": "8fff49f21dadb31db82d6b0b97d033c68c712256f18cfc1d1927b9ef7d27a94b"
+    },
+    {
+      "id": "tcl-g07-google-tv",
+      "name": "TCL Smart TV",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-g07-google-tv.json",
+      "sha256": "0267a8bea0619344c9e98191fc5689fd9886ce667112bff535d4e00af10df17b"
+    },
+    {
+      "id": "tcl-g10-google-tv",
+      "name": "TCL 55\" 4K Google TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/tcl-g10-google-tv.json",
+      "sha256": "da5be29dfee0f776bbc3f5f369cafb4c02eef47aa4ad5b06814845533e9e07c3"
+    },
+    {
+      "id": "tcl-q10g-pro",
+      "name": "TCL 55Q10G Pro",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/tcl-q10g-pro.json",
+      "sha256": "433ad94c78aac545fda97edebccc84eefd7df18ee557a1f2292fbc3aeffc0dd1"
+    },
+    {
+      "id": "tcl-qm6k-google-tv",
+      "name": "TCL QM6K Pro Google TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/tcl-qm6k-google-tv.json",
+      "sha256": "1e7af982f7e78703c6b2d6f3fa9a2968c121178ed1908c1ca3dab6b772cf199c"
+    },
+    {
+      "id": "tcl-uniontv-latin-america",
+      "name": "TCL UnionTV",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/tcl-uniontv-latin-america.json",
+      "sha256": "811cae7abbb71f4feb11c8da39ed818fa84c7151db6875d9f0e5f738eaecce1f"
+    },
+    {
+      "id": "thomson-32he5800",
+      "name": "Thomson 32HE5800",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/thomson-32he5800.json",
+      "sha256": "afac9bd1a72c0aa1dca7caff91e9490ea6f83f5f891ead7116f23ce1c6fe4f0a"
+    },
+    {
+      "id": "toshiba-fire-tv-aftha004",
+      "name": "Toshiba Fire TV",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/toshiba-fire-tv-aftha004.json",
+      "sha256": "8645f10724919eeb18dcd1dd6e95cb6101272528bc48d598d720157faf0ae28f"
+    },
+    {
+      "id": "vu-4k-lushan",
+      "name": "Vu 4K",
+      "match": null,
+      "sdk": 31,
+      "file": "devices/vu-4k-lushan.json",
+      "sha256": "88ff7a772a1915bc93dbd7306c9349447e0287306929239c87d7d8e7c3d40db8"
+    },
+    {
+      "id": "wanbo-x5-pro",
+      "name": "Wanbo X5 Pro projector",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/wanbo-x5-pro.json",
+      "sha256": "eae2a756e42724b4202eebade7880b407ed273e55d45867cb3433a27d3563f29"
+    },
+    {
+      "id": "xgimi-horizon-s-pro",
+      "name": "XGIMI Horizon S Pro projector",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/xgimi-horizon-s-pro.json",
+      "sha256": "7bf4e49962fd99873e3e4234df1ab44a47acc6ac37d782cec01b623e2ae94e7f"
+    },
+    {
+      "id": "xiaomi-mi-box-s-2nd-gen",
+      "name": "Xiaomi Mi Box S 2nd gen",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/xiaomi-mi-box-s-2nd-gen.json",
+      "sha256": "bd4ae34caf7e4838a8f006c8c6801aeb777a1f1813b0e8e41941e8a427e9ff1a"
+    },
+    {
+      "id": "xiaomi-mi-box-s",
+      "name": "Xiaomi Mi Box S",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/xiaomi-mi-box-s.json",
+      "sha256": "6149930e1dafda37681ed0e3e29cfcf901e2a4b4b77bee691b66ee6d14a0eead"
+    },
+    {
+      "id": "xiaomi-mi-tv-4a",
+      "name": "Xiaomi Mi TV 4A",
+      "match": null,
+      "sdk": null,
+      "file": "devices/xiaomi-mi-tv-4a.json",
+      "sha256": "d656f1984ca92954253c55929360e3144ee0107398d2514a184591e1dc9974eb"
+    },
+    {
+      "id": "xiaomi-mitv-aesp0",
+      "name": "Xiaomi MiTV-AESP0",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/xiaomi-mitv-aesp0.json",
+      "sha256": "f549301cd622f9b4758931b92dda429a8ffe89969db0da446ed1ff8527d62e69"
+    },
+    {
+      "id": "xiaomi-mitv-afmu0",
+      "name": "Xiaomi TV Box S 3rd gen",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/xiaomi-mitv-afmu0.json",
+      "sha256": "215b97e7e2b3e970b9a6042f451eea15b6db6778d27c4b2647a157b8f4345dd0"
+    },
+    {
+      "id": "xiaomi-mitv-astp1",
+      "name": "Xiaomi MiTV-ASTP1",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/xiaomi-mitv-astp1.json",
+      "sha256": "c52fd8f2d4b03fce7f0e2e8d25dea215cbf40eb39e1c2ccc9ce181c1e0f01705"
+    },
+    {
+      "id": "xiaomi-mitv-axfr1",
+      "name": "Xiaomi MiTV-AXFR1",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/xiaomi-mitv-axfr1.json",
+      "sha256": "24c49603e5274354f623762ebfadefc813f15bddb64fe55353ebc2b0d541a11c"
+    },
+    {
+      "id": "xiaomi-mitv-axso0",
+      "name": "Xiaomi MiTV-AXSO0",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/xiaomi-mitv-axso0.json",
+      "sha256": "e6a28c192e2d34b3b7978369c4f023374af1271de0997051e121adcbf0a1c34b"
+    },
+    {
+      "id": "xiaomi-mitv-axso2",
+      "name": "Xiaomi MiTV-AXSO2",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/xiaomi-mitv-axso2.json",
+      "sha256": "c578093e67171872b017d4d7ca9bee6a90b5f6927a7ec9c2a624d48fc5ec1412"
+    },
+    {
+      "id": "xiaomi-mitv-mooq0",
+      "name": "Xiaomi Mi TV",
+      "match": null,
+      "sdk": null,
+      "file": "devices/xiaomi-mitv-mooq0.json",
+      "sha256": "af3536bef0f477da367a388b80ef44b2f6dce543f242b1ee02a7066454fbd983"
+    },
+    {
+      "id": "xiaomi-mitv-moor2",
+      "name": "Xiaomi MiTV-MOOR2",
+      "match": null,
+      "sdk": null,
+      "file": "devices/xiaomi-mitv-moor2.json",
+      "sha256": "69fa0f6caf31086a65d3fbbcff6af8dafc4ae28405f521b02ac873e5597dc934"
+    },
+    {
+      "id": "xiaomi-mitv-mosr4",
+      "name": "Xiaomi MiTV-MOSR4",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/xiaomi-mitv-mosr4.json",
+      "sha256": "6007a93dc3c983f17404703b785c25b69339f2bc954ae016da44d7cd89d6366b"
+    },
+    {
+      "id": "xiaomi-mitv-mssp3-android9",
+      "name": "Xiaomi MiTV-MSSP3",
+      "match": null,
+      "sdk": 28,
+      "file": "devices/xiaomi-mitv-mssp3-android9.json",
+      "sha256": "1f8cb64d3f9d2817afabd4944f135be053b0b77df32a524ed5c68ebfefbe4627"
+    },
+    {
+      "id": "xiaomi-mitv-mssp3",
+      "name": "Xiaomi MiTV-MSSP3",
+      "match": null,
+      "sdk": 30,
+      "file": "devices/xiaomi-mitv-mssp3.json",
+      "sha256": "2f1147c0e50915451737aa70d5328f9042bcc9d67619c6afab69ac9398e6b962"
+    },
+    {
+      "id": "xiaomi-tv-a-pro-2026",
+      "name": "Xiaomi TV A Pro 75\" 2026",
+      "match": null,
+      "sdk": 34,
+      "file": "devices/xiaomi-tv-a-pro-2026.json",
+      "sha256": "fa27435d9b4032c9ed4987d64c185c7086d09cf323a12c31a6630c917e82e934"
+    }
+  ],
+  "lists": {
+    "launchers": {
+      "file": "lists/launchers.json",
+      "sha256": "22ccc5eac974ccc7d04d85282da866307abdf46149d91787c8c844f4e7a456cf"
+    },
+    "labels": {
+      "file": "lists/labels.json",
+      "sha256": "3ea559f35c194be63bb60f9d71dfba7ba270f6b40e2380c05f6cdf18cfcfad96"
+    },
+    "streaming": {
+      "file": "lists/streaming.json",
+      "sha256": "907e47666b18673d634bd8a3840a32acbc7d9c083b14ae14bd6359b025db2d4f"
+    },
+    "protected": {
+      "file": "lists/protected.json",
+      "sha256": "64ef6890111a65548fd9fca73ede454fbe71a7fa5a9f0840ccf9e0679abea20e"
+    }
+  },
+  "logos": {
+    "7plus": {
+      "file": "logos/7plus.png",
+      "sha256": "8bd3ae51b19d7c40a181dbdb335ca168b780674b7be9987f12608b8f179eec6f"
+    },
+    "9now": {
+      "file": "logos/9now.png",
+      "sha256": "2fb0731bd2e9ad515ef54514d615c1fad054c850eb1c67d5cf18feff173f43a6"
+    },
+    "abciview": {
+      "file": "logos/abciview.png",
+      "sha256": "efa305e17c8132dbefdc60d1cb57cafe318183e0e1812bc67f25af294691777e"
+    },
+    "abema": {
+      "file": "logos/abema.png",
+      "sha256": "3eb9f1bc4ad46f77c5e1bce80c0666abb413044dd90b7f3d3a7145c76b1c5e01"
+    },
+    "aha": {
+      "file": "logos/aha.png",
+      "sha256": "4d6e134a035e03801002c522e823a0ff0574ca3b83d9a84c03d59d6a0e5f748b"
+    },
+    "amazonmusic": {
+      "file": "logos/amazonmusic.png",
+      "sha256": "4f60ad2cc3c2c6e5603b58e1a4ab19e054d68c21144b4e0dfa37226c4dfd23d4"
+    },
+    "appletv": {
+      "file": "logos/appletv.png",
+      "sha256": "f04cca04db2b665ee585c0ad18d77e2cdb0a27db3d4af5574732a4f641196aa2"
+    },
+    "ardmediathek": {
+      "file": "logos/ardmediathek.png",
+      "sha256": "162dc867d6c733d115f2cd9c04572ebf5ae2f8ee261f5875c38bfc9f72701b90"
+    },
+    "atresplayer": {
+      "file": "logos/atresplayer.png",
+      "sha256": "4867bf82e242b9e3d0d12d2629740cc3b8a68bda22a39e96bfd2c19f54588a4b"
+    },
+    "bbciplayer": {
+      "file": "logos/bbciplayer.png",
+      "sha256": "6c9913166ab051fe6123a231b3fde1e1823a46de62da98ce7bc576ad9d5119c3"
+    },
+    "bilibili": {
+      "file": "logos/bilibili.png",
+      "sha256": "cdff6ead2709ec99f753d93fe606fcf564bf8ed4512e0b538ddcb3417b0c1468"
+    },
+    "binge": {
+      "file": "logos/binge.png",
+      "sha256": "b4bad5f2431d933053ac37703cf481f8f1be8486769a9b8ea03ab7a8fede547f"
+    },
+    "canalplus": {
+      "file": "logos/canalplus.png",
+      "sha256": "4b9d7001ec659b1ef57406fefb7e2c896e3f04b93d27e2a50df57e4b515346ec"
+    },
+    "cbcgem": {
+      "file": "logos/cbcgem.png",
+      "sha256": "5b061a27f7d8f4a1d2e98453bf171fac14b47f998cf218642978e2c9cd7f567d"
+    },
+    "channel4": {
+      "file": "logos/channel4.png",
+      "sha256": "52394fd98edfcf87885b51d205ba22375c60994c59c3f189bc37aa01616f7798"
+    },
+    "channel5": {
+      "file": "logos/channel5.png",
+      "sha256": "5ad2d289772826b128787b94c9d646168366abad601d28f19985ad9a6bdfe29b"
+    },
+    "clarovideo": {
+      "file": "logos/clarovideo.png",
+      "sha256": "2a4e86883208c51d40f4e99bf2240194052a58c07bf4603b5a51102b76af38cb"
+    },
+    "coupangplay": {
+      "file": "logos/coupangplay.png",
+      "sha256": "beb68406dbd10fce4c2469ef6596d5370885d5740395349d8d87d6a40ea4f770"
+    },
+    "crave": {
+      "file": "logos/crave.png",
+      "sha256": "a1494722212ce19a1eb0a192e4eadab44540f6247a1adc86657ce92f104001f0"
+    },
+    "crunchyroll": {
+      "file": "logos/crunchyroll.png",
+      "sha256": "46c0875620d12eca3e59afc6579d68631da8efa0b653dfa790e1936b0ddc96d6"
+    },
+    "dazn": {
+      "file": "logos/dazn.png",
+      "sha256": "bb7552215f1e9edd717463979b9caa7c516e5bc19c2bef5150d5e09dca0179d7"
+    },
+    "deezer": {
+      "file": "logos/deezer.png",
+      "sha256": "0cd7dbdf817d775cff8091e5e535fd850c2b4f9b09a0c5fba81227651522d8c7"
+    },
+    "disney": {
+      "file": "logos/disney.png",
+      "sha256": "555c45701e88e26b90332bea36031db77f0fe62e8abea69ac1f356bdb46d8b80"
+    },
+    "drtv": {
+      "file": "logos/drtv.png",
+      "sha256": "0f1ad9fe06dabc608b23c858632e6b932a5eddb6acefba923dfbbf056bb33c11"
+    },
+    "dstvstream": {
+      "file": "logos/dstvstream.png",
+      "sha256": "0d8d53f2cf11f411e65e624dd2731cf5a45bf567a5839c008943ae1b28ead6f0"
+    },
+    "emby": {
+      "file": "logos/emby.png",
+      "sha256": "e80fe3d7ac6c7b78e90f6328b33c7f0325d437f434fc05820ad473692676aa6c"
+    },
+    "francetv": {
+      "file": "logos/francetv.png",
+      "sha256": "b2cbe6fb277f2205b02c6ac3ffe78fd0e40a980a4891e3ad0957ed2d2fff89c5"
+    },
+    "fubo": {
+      "file": "logos/fubo.png",
+      "sha256": "45679a5206ff74e5f98b0c2a4d852ee76c83432dd0023c70651d876f130838d2"
+    },
+    "globoplay": {
+      "file": "logos/globoplay.png",
+      "sha256": "8fe5a2798eb95b029719d4a2397a715e4ab8b2642f28c465b36a6f6791447177"
+    },
+    "hbomax": {
+      "file": "logos/hbomax.png",
+      "sha256": "c8a9e2bcf4f48fa27ee04e408fff6f83b3b4542011085f2e4dabcb09f7056c9e"
+    },
+    "hoichoi": {
+      "file": "logos/hoichoi.png",
+      "sha256": "3b9637bbc93e8c7da83f3ad88bf9de0837cddbc3794b5e4bdabdaf64cb040707"
+    },
+    "hulu": {
+      "file": "logos/hulu.png",
+      "sha256": "9aae5637c4e6055f42883a035ff8b04431dfa1525f80739acfc94d4ed579ac0a"
+    },
+    "hulujapan": {
+      "file": "logos/hulujapan.png",
+      "sha256": "946cd511b0b70885a978d4aa6cae16f0c0f38414b14f37edb2723950a8c2a625"
+    },
+    "iheartradio": {
+      "file": "logos/iheartradio.png",
+      "sha256": "1ade9ceb2ff0c0fb08c8d4045306077d7660629e18e0f79ac7db6ac8087293aa"
+    },
+    "iqiyi": {
+      "file": "logos/iqiyi.png",
+      "sha256": "98c55e30f834c1a1332c93a2efb3242b3e7c3d2ad188ebe1e1f395014e491770"
+    },
+    "itvx": {
+      "file": "logos/itvx.png",
+      "sha256": "e1f45de31646a924c8f93d192ce8c651b5fca3f5573f1a57f87e14b2c3b31b0e"
+    },
+    "jellyfin": {
+      "file": "logos/jellyfin.png",
+      "sha256": "253c4f382e453288dc54be0a9ea16ee2ae04c7035283c7b6d0fc8b4afc3571a2"
+    },
+    "jiohotstar": {
+      "file": "logos/jiohotstar.png",
+      "sha256": "90043966578a5fffc6aef72f89bb1fe07632bcb06b6e7720f830c5ecae21cb27"
+    },
+    "jiosaavn": {
+      "file": "logos/jiosaavn.png",
+      "sha256": "d2ee6b934efb94ba9d98e2b8efd19af4da8643a403ceb7425ccda2a35db3b090"
+    },
+    "jiotvplus": {
+      "file": "logos/jiotvplus.png",
+      "sha256": "03ea2930c0129896543ccfe82fb8c92d4a99a5c9835f2e233cdf4dea9928a79b"
+    },
+    "joyn": {
+      "file": "logos/joyn.png",
+      "sha256": "bf00fe19ad47b3250cf20df004189dd3456824ed3df5a45abc831395d07f19ec"
+    },
+    "kayo": {
+      "file": "logos/kayo.png",
+      "sha256": "f1d8f7127ced611fba36a0f5d4694c75d49bb6db37ce0fe414a02ac7d3ba43f8"
+    },
+    "kodi": {
+      "file": "logos/kodi.png",
+      "sha256": "9056568aa6f3ae41926d7394eb058cdff695af9bad46daef7a6f02635a7ee2c2"
+    },
+    "m6plus": {
+      "file": "logos/m6plus.png",
+      "sha256": "655d96fbaa98fe2675fa226e8eb4f9680b06207c3574232b574e36e31c521aa2"
+    },
+    "mediasetinfinity": {
+      "file": "logos/mediasetinfinity.png",
+      "sha256": "3c5d82ba84c72ffedaa6bc6332048174710c76f7bb9ddeb4231e6864f16a0766"
+    },
+    "netflix": {
+      "file": "logos/netflix.png",
+      "sha256": "2cc8714ef83a99d32893ccaac6689cb626bdbc64ee078827368785f58ed463dd"
+    },
+    "now": {
+      "file": "logos/now.png",
+      "sha256": "8cc055ca652980fb54f653fb8fadfb42ef2b1ec7e3e7be303eaae24a932ff727"
+    },
+    "npostart": {
+      "file": "logos/npostart.png",
+      "sha256": "1931fc251d4bf70a7011f4347bec802b836575dccb95724aa218d661acdbec40"
+    },
+    "nrktv": {
+      "file": "logos/nrktv.png",
+      "sha256": "09adda8c39a3db16b149a1894d64c9fa69655b492738ae3e910d2196c01fb8ce"
+    },
+    "osnplus": {
+      "file": "logos/osnplus.png",
+      "sha256": "5f3f7df5aa52eff3c3b0545be189280d15d8246c85ca4f2fa3b7c850e87c10bb"
+    },
+    "pandora": {
+      "file": "logos/pandora.png",
+      "sha256": "580ae0d465c0e6c766873b1e3449be4926d6a74dcd83b0cd73b7e31d595a65f6"
+    },
+    "paramount": {
+      "file": "logos/paramount.png",
+      "sha256": "ea0ff29e3ffab546158b8ec2aba96f183c2762db2f8cb35b52b39368d0143ef2"
+    },
+    "peacock": {
+      "file": "logos/peacock.png",
+      "sha256": "faab25d8414ae924c36c607024c46be10c5a20f05d67034c4ed51ee062fd393a"
+    },
+    "philo": {
+      "file": "logos/philo.png",
+      "sha256": "9f1df59523ca998641230123dcd2c1eeb55809a765591b1ecf8c2bea65477e9a"
+    },
+    "plex": {
+      "file": "logos/plex.png",
+      "sha256": "def82ebe494e779b6ef4c7ac977740268a2f688f2ee12bd0b40dcccf98a0e752"
+    },
+    "plutotv": {
+      "file": "logos/plutotv.png",
+      "sha256": "1937d8ad54449659ae34846e6333f703c50a824d8f6adb19786651cc87ec2065"
+    },
+    "primevideo": {
+      "file": "logos/primevideo.png",
+      "sha256": "6af77090507ffa5232482114c6d33bafe56e7ea440b42e5897acec4b476c4514"
+    },
+    "qobuz": {
+      "file": "logos/qobuz.png",
+      "sha256": "6fdea11278da8540b9d453e17f3b81c1c203bac0e5c2eb1e377631d06bb1f730"
+    },
+    "raiplay": {
+      "file": "logos/raiplay.png",
+      "sha256": "1222a13bc6b25e5ce416e8b9aac8aad856f61e4b217ece55a2554a17cc91af25"
+    },
+    "rakutentv": {
+      "file": "logos/rakutentv.png",
+      "sha256": "16a5798b1a1d32f4f1ff1074607234684b0f23dd2130c1dd18a85e413d7508de"
+    },
+    "rtlplus": {
+      "file": "logos/rtlplus.png",
+      "sha256": "c5cbe8cfa3660003eb89bc3932791313bd14b6840776611fe4f1f2db581512b8"
+    },
+    "rtveplay": {
+      "file": "logos/rtveplay.png",
+      "sha256": "630d539e87dab0d42f5bfcdd0b8cd195dbd70e90ad1802ef56254d31e7ae7e09"
+    },
+    "sbsondemand": {
+      "file": "logos/sbsondemand.png",
+      "sha256": "a4e1cba4e00ccc88693286f30aaac2105396a589a300b1032c44663d2ec9684c"
+    },
+    "shahid": {
+      "file": "logos/shahid.png",
+      "sha256": "9a557d39fcad3ece6058a0e9a9abc8fa38eeffeb2f739acd9ab6272fa7b9bccb"
+    },
+    "skyshowtime": {
+      "file": "logos/skyshowtime.png",
+      "sha256": "420ebba8b67f832cdf6fa3c243797632f631fdf893c6ba06594d55ea46c175f8"
+    },
+    "slingtv": {
+      "file": "logos/slingtv.png",
+      "sha256": "50bb26f7f8d37a2ea002e533cc3f52e6a0cdefba17d59874e1d7c05ff7d277fa"
+    },
+    "sonyliv": {
+      "file": "logos/sonyliv.png",
+      "sha256": "b0a50374edc19f316e0e02627a0d96444294ff97901c73efa783d1ca543dca2a"
+    },
+    "soundcloud": {
+      "file": "logos/soundcloud.png",
+      "sha256": "62e65b7d077fe8b759b533c4712e5971d217baf5d63a20602a0d2dd2b54ef225"
+    },
+    "spotify": {
+      "file": "logos/spotify.png",
+      "sha256": "fa5f515bdc8db3cdc37d0260dfbf09fe34252660e2abc650a5755ddb20645c5c"
+    },
+    "stacktv": {
+      "file": "logos/stacktv.png",
+      "sha256": "275634ca5dce3a23458e59610e5041dd2173a1c0e47b2c44d70f8ae2ecabf925"
+    },
+    "stan": {
+      "file": "logos/stan.png",
+      "sha256": "caa05b4eb039b9ebda1fbd769ac29c6d3365a093abcdf81ea0caa54b6f33d800"
+    },
+    "starz": {
+      "file": "logos/starz.png",
+      "sha256": "942da0a012cb6dd66b1635e95484c755ce6a9690d1e3a8d43232d560f4cf4001"
+    },
+    "sunnxt": {
+      "file": "logos/sunnxt.png",
+      "sha256": "d3435852c0a47f9b139a90c263619685aac9c12697b7a2e380472e6c3af147b3"
+    },
+    "svtplay": {
+      "file": "logos/svtplay.png",
+      "sha256": "a79bf2b278197d6ff57fc756c4fb2679316afcab7b2b81242749189d8f87a7b7"
+    },
+    "symfonium": {
+      "file": "logos/symfonium.png",
+      "sha256": "130a8e05eee8313eae734c6da305e621d21b110c8082cd043c65a78e580b9af8"
+    },
+    "ten": {
+      "file": "logos/ten.png",
+      "sha256": "1a8273e02748c720feea974083faaeaa02f97a336f8924e16fa9d25b058b99e5"
+    },
+    "tf1plus": {
+      "file": "logos/tf1plus.png",
+      "sha256": "aa648afe13ab1fd8b6f532f094f16ef5d437f3bb37723de2c42841baa0440692"
+    },
+    "tidal": {
+      "file": "logos/tidal.png",
+      "sha256": "5e4dcddf8396a0a78ac2f2705de815d1a1bd1da1c9970b66683f8110d44e8e52"
+    },
+    "tubi": {
+      "file": "logos/tubi.png",
+      "sha256": "83c3961ab8ef8b71abb4c03623556ca0b3c1ea94e2e0622b512f636ade80567d"
+    },
+    "tunein": {
+      "file": "logos/tunein.png",
+      "sha256": "f38be9576798a016b826fe28fea8e766f42170ea28246b25d8277d223e3a9602"
+    },
+    "tver": {
+      "file": "logos/tver.png",
+      "sha256": "0a9e6bc1afdf0dc31f47a1dfe276cc9523a37a1131a55473c9f4fe1e658d731d"
+    },
+    "tving": {
+      "file": "logos/tving.png",
+      "sha256": "ee2eb0af37d82d88d74c2f02faff2f4c9160903bb103380b2c642ebfe2b284dd"
+    },
+    "twitch": {
+      "file": "logos/twitch.png",
+      "sha256": "6477d560f7ed2b7b4e2e188974e1c99ce4b9ba67eace6e2356ac9b1707b82e87"
+    },
+    "uktv": {
+      "file": "logos/uktv.png",
+      "sha256": "74c340be7538705af11556321381279932a0b5dec45ceeb26dcc546c2a141f2c"
+    },
+    "unext": {
+      "file": "logos/unext.png",
+      "sha256": "cfefc2da82e864ebd7ab5d12385a49919a59ff13e1bbb42daa6a6d126869fcd4"
+    },
+    "viaplay": {
+      "file": "logos/viaplay.png",
+      "sha256": "af93d82c1cc8ba7d95cba9fac7eb7a8c2c7ff8fda8fcf8039c92f71dabe57815"
+    },
+    "videoland": {
+      "file": "logos/videoland.png",
+      "sha256": "c537c8908b01aa0aa1c44a7504cf2d166d3584812f3e53dee5dd198a47cb716f"
+    },
+    "viki": {
+      "file": "logos/viki.png",
+      "sha256": "5fbb12e6f299a6018e507c2250d26072d600a7f48c24a660b0d517f4b9f1fdc2"
+    },
+    "viu": {
+      "file": "logos/viu.png",
+      "sha256": "19bd31225f5595377ca4713872315090fedc6e68c60de67ce0ebb951c57f4b6f"
+    },
+    "vix": {
+      "file": "logos/vix.png",
+      "sha256": "0353581bef0ff6fcfadb30aab8d09e98c46b7d113962948f09d82e4d7fd43c7c"
+    },
+    "wetv": {
+      "file": "logos/wetv.png",
+      "sha256": "34bf4669b869b532ccfd5747680e5ee01e0fe27b6871d762f84fa43738adc902"
+    },
+    "wholphin": {
+      "file": "logos/wholphin.png",
+      "sha256": "796b70a21f2541d2dba775a9ef979509f669345a43ba9e1d98e9c07371e4b71c"
+    },
+    "youtube": {
+      "file": "logos/youtube.png",
+      "sha256": "2ba970f6100792098174cbcb5b809116f259dd7ee7df1faef99b344200a98b4d"
+    },
+    "youtubetv": {
+      "file": "logos/youtubetv.png",
+      "sha256": "18e17f78fbb97595d879dd1ea64ada921e0e6742aa3d7325247f7bc21d90ecb1"
+    },
+    "zdf": {
+      "file": "logos/zdf.png",
+      "sha256": "b678243286f33e733631149be28b2f333e97d7db1ee03bc6ab87156362ebe1c8"
+    },
+    "zee5": {
+      "file": "logos/zee5.png",
+      "sha256": "da6fa69cf95228dc74e1686c218e3321ee8885c212f2c1377185c0090b9da5ad"
+    }
+  }
+}

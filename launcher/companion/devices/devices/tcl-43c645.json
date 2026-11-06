@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "id": "tcl-43c645",
+  "name": "TCL 43C645",
+  "tested": {
+    "os": "Android TV 11",
+    "sdk": 30,
+    "build": null
+  },
+  "launcher": "com.google.android.apps.tv.launcherx",
+  "keep": [],
+  "groups": [
+    {
+      "title": "1. Telemetry, promos, content rows",
+      "packages": [
+        {
+          "pkg": "com.tcl.bi"
+        },
+        {
+          "pkg": "com.tcl.dashboard"
+        },
+        {
+          "pkg": "com.tcl.esticker"
+        },
+        {
+          "pkg": "com.tcl.partnercustomizer"
+        },
+        {
+          "pkg": "com.tcl.messagebox"
+        },
+        {
+          "pkg": "com.tcl.overseasappshow"
+        },
+        {
+          "pkg": "com.google.android.partnersetup"
+        },
+        {
+          "pkg": "com.google.android.feedback"
+        },
+        {
+          "pkg": "com.google.android.onetimeinitializer"
+        }
+      ]
+    },
+    {
+      "title": "1b. Google TV first-run wizard (claims HOME once the stock launcher is off)",
+      "packages": [
+        {
+          "pkg": "com.google.android.tungsten.setupwraith"
+        }
+      ]
+    },
+    {
+      "title": "2. Extras",
+      "packages": [
+        {
+          "pkg": "com.tcl.useragreement"
+        },
+        {
+          "pkg": "com.tcl.android.webview"
+        },
+        {
+          "pkg": "com.tcl.guard"
+        },
+        {
+          "pkg": "com.tcl.keyhelp"
+        },
+        {
+          "pkg": "com.tcl.tv.tclhome_passive"
+        },
+        {
+          "pkg": "com.google.android.syncadapters.calendar"
+        },
+        {
+          "pkg": "com.google.android.videos"
+        },
+        {
+          "pkg": "tv.wuaki.apptv"
+        }
+      ]
+    },
+    {
+      "title": "3. Off by choice",
+      "packages": [
+        {
+          "pkg": "com.tcl.versionUpdateApp",
+          "note": "firmware updater"
+        },
+        {
+          "pkg": "com.tcl.miracast",
+          "note": "screen mirroring (Cast receiver kept)"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "repo": "Gathin23/cleanyourtv",
+    "path": "examples/tcl-43c645/debloat.txt",
+    "commit": "0c5ffc72be60f67fca2682528d59313632dcff27"
+  }
+}

@@ -16,5 +16,3 @@ dependencyResolutionManagement {
 rootProject.name = "tvhome"
 include ':app', ':standalone'
 
-include ':companion', ':wirelessdebug'
-project(':wirelessdebug').projectDir = file('../wireless-debug-src/wirelessdebug')

@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "id": "hisense-smarttv-4k-ffm",
+  "name": "Hisense SmartTV 4K FFM",
+  "tested": {
+    "os": "Android TV 10",
+    "sdk": null,
+    "build": null
+  },
+  "launcher": "com.google.android.tvlauncher",
+  "keep": [],
+  "groups": [
+    {
+      "title": "Hisense telemetry: ACR (\"Enhanced Viewing\" content recognition and data-sharing consent)",
+      "packages": [
+        {
+          "pkg": "com.hisense.evservice"
+        }
+      ]
+    },
+    {
+      "title": "Hisense content, preloads and push messages",
+      "packages": [
+        {
+          "pkg": "net.vidaatv.hisense.android.tv",
+          "note": "VIDAA app preload"
+        },
+        {
+          "pkg": "com.hisense.fte",
+          "note": "first-time experience"
+        },
+        {
+          "pkg": "com.hisense.hibrowser"
+        },
+        {
+          "pkg": "com.hisense.service.message",
+          "note": "Hisense push messages"
+        }
+      ]
+    },
+    {
+      "title": "Retail demo / store / hotel mode",
+      "packages": [
+        {
+          "pkg": "com.hisense.storemode"
+        },
+        {
+          "pkg": "com.hisense.hotelmode"
+        },
+        {
+          "pkg": "com.hisense.tv.b2b"
+        },
+        {
+          "pkg": "com.demo"
+        }
+      ]
+    },
+    {
+      "title": "Firmware updates. Re-enable all three to receive an OTA update.",
+      "packages": [
+        {
+          "pkg": "com.hisense.tv.ota"
+        },
+        {
+          "pkg": "com.hisense.remoteupgrade"
+        },
+        {
+          "pkg": "com.vt.tv.usbota"
+        }
+      ]
+    },
+    {
+      "title": "Google home-screen content",
+      "packages": [
+        {
+          "pkg": "com.google.android.tvrecommendations"
+        },
+        {
+          "pkg": "com.google.android.videos",
+          "note": "Google TV movies"
+        },
+        {
+          "pkg": "com.google.android.youtube.tvmusic"
+        }
+      ]
+    },
+    {
+      "title": "Voice assistants. The remote's microphone button stops working.",
+      "packages": [
+        {
+          "pkg": "com.hisense.alexa"
+        },
+        {
+          "pkg": "com.google.android.tv.assistant"
+        },
+        {
+          "pkg": "com.google.android.katniss",
+          "note": "Google Assistant and voice search"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "repo": "Gathin23/cleanyourtv",
+    "path": "examples/hisense-smarttv-4k-ffm/debloat.txt",
+    "commit": "0c5ffc72be60f67fca2682528d59313632dcff27"
+  }
+}

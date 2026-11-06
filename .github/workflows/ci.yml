@@ -31,40 +31,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check out Wireless Debug library (Apache-2.0)
-        uses: actions/checkout@v4
-        with:
-          repository: xswl369/android-wireless-debug
-          ref: main
-          path: wireless-debug-src
-      - name: Enable legacy ADB authorization prompt
-        run: python3 tools/patch_wireless_debug_adb_auth.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
       - uses: android-actions/setup-android@v3
         with:
-          packages: platforms;android-34 build-tools;34.0.0
+          packages: platforms;android-34 platforms;android-37 build-tools;34.0.0 build-tools;36.0.0
       - uses: gradle/actions/setup-gradle@v4
-      - name: Unit tests, lint and release builds
+      - name: Launcher unit tests, lint and release builds
         working-directory: launcher
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon \
             :app:testReleaseUnitTest :app:lintRelease :app:assembleRelease \
             :standalone:testReleaseUnitTest :standalone:lintRelease :standalone:assembleRelease
-          ./gradlew --no-daemon :companion:assembleRelease -x :wirelessdebug:bundleReleaseLocalLintAar
+      - name: SickTv companion release build
+        working-directory: launcher/companion
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon :app:assembleGithubRelease
       - name: Original launcher stays small
         run: |
           size=$(stat -c %s launcher/app/build/outputs/apk/release/app-release.apk)
           echo "original launcher APK: $((size / 1024)) KB"
           test "$size" -lt 5242880 || { echo "Original launcher APK is over 5 MiB; review launcher assets"; exit 1; }
-      - name: Upload phone companion APK
+      - name: Upload SickTv companion APK
         uses: actions/upload-artifact@v4
         with:
-          name: CleanYourTV-Phone-Companion-Signed-APK
-          path: launcher/companion/build/outputs/apk/release/companion-release.apk
+          name: SickTv-Phone-Companion-Signed-APK
+          path: launcher/companion/app/build/outputs/apk/github/release/app-github-release.apk
           if-no-files-found: error
           retention-days: 14
       - name: Upload standalone APK

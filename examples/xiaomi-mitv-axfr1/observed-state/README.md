@@ -5,33 +5,15 @@ It is separate from the community example at [`../debloat.txt`](../debloat.txt):
 [`debloat.txt`](debloat.txt) records the packages observed disabled on this TV, while
 [`not-installed-user-0.txt`](not-installed-user-0.txt) records packages absent for user 0.
 
-## Set up another TV
+## Set up another TV with SickTv
 
-Enable ADB debugging on the TV and connect your computer to its current IP. Install Python 3,
-JDK 17, Android SDK platform 34, and Android build tools. From the repository root:
+Use the **SickTv** phone companion app (`app.sicktv`) to connect to your TV and apply this debloat profile and custom launcher directly over wireless ADB without needing a computer:
 
-```sh
-python3 -m venv tools/venv
-tools/venv/bin/pip install -r tools/requirements.txt
-TV_HOST=<TV_IP> launcher/build-and-install.sh
-TV_HOST=<TV_IP> tools/disable.sh examples/xiaomi-mitv-axfr1/observed-state/debloat.txt
-```
-
-On Windows, use the PowerShell versions:
-
-```powershell
-python -m venv tools\venv
-tools\venv\Scripts\python.exe -m pip install -r tools\requirements.txt
-$env:TV_HOST = '<TV_IP>'
-powershell -ExecutionPolicy Bypass -File launcher\build-and-install.ps1 -TvHost $env:TV_HOST
-powershell -ExecutionPolicy Bypass -File tools\disable.ps1 -TvHost $env:TV_HOST examples\xiaomi-mitv-axfr1\observed-state\debloat.txt
-```
-
-Build and start the custom launcher before applying the package list. The installer safely switches
-Home and disables the stock launcher after the custom launcher starts. The package script uses
-`pm disable-user`; it does not uninstall apps. It saves a restore record before changing package
-states. To restore the debloat changes, run `tools/restore.sh` or `tools/restore.ps1` with the same
-list and keep the generated record.
+1. Connect your phone to the same Wi-Fi network as the TV.
+2. Enable **Network Debugging** on the TV.
+3. Open **SickTv** on your phone and select your TV from the scan list.
+4. Apply the `xiaomi-mitv-axfr1` debloat profile to safely disable the listed bloatware packages.
+5. Install the **CleanYourTV** launcher (`com.sayan.tvhome`) as your default home screen.
 
 The package list reflects one live TV, not every AXFR1 firmware. It includes Live TV/input and
 remote-related packages; read [the state notes](package-state.md) before applying it to another set.

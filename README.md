@@ -43,53 +43,16 @@ The observed state for this TV is documented in [the device profile](examples/xi
 
 The debloat workflow uses Android's pm disable-user command; it does not uninstall packages. Review the package notes before applying this list to another TV or firmware.
 
-## Install on the TV
+## Install on the TV with SickTv Companion
 
-### Requirements
+The companion mobile app **SickTv** (`app.sicktv`) runs directly on your Android phone to discover your TV, debloat it, and install the CleanYourTV launcher over wireless ADB without needing a computer or command-line scripts.
 
-- A computer on the same network as the TV
-- Android TV debugging enabled, with the computer authorized on the TV
-- Python 3
-- Android Studio, which supplies JDK 17 and the Android SDK. The launcher build uses Android SDK platform 34 and build tools 34.0.0.
-
-### Windows PowerShell
-
-Run these commands from the repository folder. Replace the TV_IP placeholder with the TV's current address; the address is intentionally not stored in this public repository.
-
-```powershell
-python -m venv tools\venv
-tools\venv\Scripts\python.exe -m pip install -r tools\requirements.txt
-
-$env:TV_HOST = '<TV_IP>'
-powershell -ExecutionPolicy Bypass -File launcher\build-and-install.ps1 -TvHost $env:TV_HOST
-```
-
-Once the launcher is installed and starts on Home, apply the device-specific package list only if you want the recorded debloat state:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\disable.ps1 -TvHost $env:TV_HOST examples\xiaomi-mitv-axfr1\observed-state\debloat.txt
-```
-
-To restore the packages and Home state recorded by the disable workflow:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools\restore.ps1 -TvHost $env:TV_HOST examples\xiaomi-mitv-axfr1\observed-state\debloat.txt
-```
-
-Keep the recovery record created by the disable script. The installer also includes rollback handling for switching the default Home app.
-
-### macOS or Linux
-
-```sh
-python3 -m venv tools/venv
-tools/venv/bin/pip install -r tools/requirements.txt
-
-export TV_HOST='<TV_IP>'
-launcher/build-and-install.sh
-tools/disable.sh examples/xiaomi-mitv-axfr1/observed-state/debloat.txt
-# Restore later with:
-tools/restore.sh examples/xiaomi-mitv-axfr1/observed-state/debloat.txt
-```
+### How to use SickTv:
+1. Ensure your phone and Android TV are connected to the same Wi-Fi network.
+2. Enable **Network Debugging** (or **Wireless Debugging** on Android 11+) in your TV's Developer options.
+3. Open **SickTv** on your phone. It automatically scans your local network and discovers your TV.
+4. Select your TV, review the debloat list for your model, and tap to disable bloatware.
+5. Select **CleanYourTV** from the launcher list to automatically download and install `com.sayan.tvhome` as your default home screen.
 
 ## Useful files
 

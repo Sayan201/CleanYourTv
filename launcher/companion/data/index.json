@@ -1,0 +1,19 @@
+{
+  "sigs": ["p256:MEYCIQCDoAxE1dn4R4XYomZK5KiS7P6VQYCoFTQg7YeFhJhpDQIhAPxsMoEhFGCbuWssIK+ZL//J9Mbq+F1CSH5yUkjo6rCt"],
+  "schema": 1,
+  "version": 2026110608,
+  "lists": {
+    "launchers": {
+      "file": "launchers.json",
+      "sha256": "4bf53d422c64a179ef4531fd21b2ff2a1fd53e8034b5cee69858735e8db42fc2"
+    },
+    "labels": {
+      "file": "labels.json",
+      "sha256": "3ea559f35c194be63bb60f9d71dfba7ba270f6b40e2380c05f6cdf18cfcfad96"
+    },
+    "streaming": {
+      "file": "streaming.json",
+      "sha256": "3bf79607de53abf06633ddd0f3f2b327b6070df7ccfa6278b5e4942eb227f7fd"
+    }
+  }
+}

@@ -6,6 +6,12 @@ launcher/build/
 launcher/app/build/
 launcher/standalone/build/
 launcher/local.properties
+launcher/companion/.gradle/
+launcher/companion/.kotlin/
+launcher/companion/build/
+launcher/companion/app/build/
+launcher/companion/adb/build/
+launcher/companion/local.properties
 # Local workspace, dumps and generated scratch files.
 work/
 # your own TV's dumps (serial, android_id, device names) stay local

@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "id": "xiaomi-mitv-aesp0",
+  "name": "Xiaomi MiTV-AESP0",
+  "tested": {
+    "os": "Android TV 9",
+    "sdk": 28,
+    "build": null
+  },
+  "launcher": "com.google.android.tvlauncher",
+  "keep": [],
+  "groups": [
+    {
+      "title": "Xiaomi + Google telemetry",
+      "packages": [
+        {
+          "pkg": "com.miui.tv.analytics"
+        },
+        {
+          "pkg": "com.google.android.feedback"
+        },
+        {
+          "pkg": "com.google.android.tv.bugreportsender"
+        },
+        {
+          "pkg": "tv.alphonso.alphonso_eula",
+          "note": "Alphonso automatic content recognition (viewing tracking)"
+        }
+      ]
+    },
+    {
+      "title": "PatchWall, content rows, sponsored rows",
+      "packages": [
+        {
+          "pkg": "com.mitv.tvhome.atv"
+        },
+        {
+          "pkg": "com.mitv.tvhome.michannel"
+        },
+        {
+          "pkg": "com.xm.webcontent"
+        },
+        {
+          "pkg": "com.google.android.tvrecommendations"
+        },
+        {
+          "pkg": "android.autoinstalls.config.xiaomi.mibox3",
+          "note": "Play auto-install of partner apps"
+        },
+        {
+          "pkg": "android.autoinstalls.config.xioami.mibox3",
+          "note": "same, misspelled duplicate (sic, \"xioami\")"
+        }
+      ]
+    },
+    {
+      "title": "Preloaded apps",
+      "packages": [
+        {
+          "pkg": "com.dazn"
+        },
+        {
+          "pkg": "com.nousguide.android.rbtv",
+          "note": "Red Bull TV"
+        },
+        {
+          "pkg": "com.google.android.apps.tachyon",
+          "note": "Google Duo"
+        },
+        {
+          "pkg": "com.google.android.play.games"
+        },
+        {
+          "pkg": "com.tcl.browser"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "repo": "Gathin23/cleanyourtv",
+    "path": "examples/xiaomi-mitv-aesp0/debloat.txt",
+    "commit": "0c5ffc72be60f67fca2682528d59313632dcff27"
+  }
+}

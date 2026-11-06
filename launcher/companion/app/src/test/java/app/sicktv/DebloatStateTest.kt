@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: GPL-3.0-only
+
+package app.sicktv
+
+import app.sicktv.data.Action
+import app.sicktv.data.AppInfo
+import app.sicktv.data.DeviceList
+import app.sicktv.data.HistoryEntry
+import app.sicktv.data.ListGroup
+import app.sicktv.data.ListPackage
+import app.sicktv.data.Suggestions
+import app.sicktv.data.UiText
+import app.sicktv.data.suggest
+import app.sicktv.ui.DeviceUi
+import app.sicktv.ui.PLAY_STORE
+import app.sicktv.ui.debloatState
+import app.sicktv.ui.offerLauncherCard
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class DebloatStateTest {
+    private val list = DeviceList(
+        "x", "X", null, 30, keep = setOf("com.acme.keep"),
+        groups = listOf(ListGroup("Junk", listOf("com.acme.a", "com.acme.b", "com.acme.c", "com.acme.keep").map { ListPackage(it, null, false) })),
+    )
+
+    private fun app(pkg: String, enabled: Boolean, protected: UiText? = null) = AppInfo(pkg, pkg, null, true, enabled, protected, "1")
+
+    private fun turnedOff(pkg: String) = HistoryEntry(1, "tv", 0, Action.Disable, pkg, pkg, Action.Enable, null)
+
+    private fun ui(apps: List<AppInfo>, history: List<HistoryEntry> = emptyList()) =
+        DeviceUi(apps = apps, history = history, lists = Suggestions.Ready(null, list, 30, suggest(list, apps, 30), emptyList()))
+
+    @Test fun `an app on the list that came back on counts once`() {
+        // a came back after SickTv turned it off; b is still on; c is off.
+        val d = debloatState(ui(listOf(app("com.acme.a", true), app("com.acme.b", true), app("com.acme.c", false)), listOf(turnedOff("com.acme.a"))))
+        assertEquals(3, d.total)
+        assertEquals(2, d.on)
+        assertEquals(1, d.back)
+        assertEquals(2, d.count)
+        assertTrue(d.todo)
+    }
+
+    @Test fun `an app off the list that came back on adds to the count`() {
+        val d = debloatState(ui(listOf(app("com.acme.a", true), app("com.acme.b", false), app("com.other", true)), listOf(turnedOff("com.other"))))
+        assertEquals(1, d.on)
+        assertEquals(1, d.back)
+        assertEquals(2, d.count)
+    }
+
+    @Test fun `nothing left means nothing to do`() {
+        val d = debloatState(ui(listOf(app("com.acme.a", false), app("com.acme.b", false))))
+        assertEquals(2, d.total)
+        assertEquals(0, d.on)
+        assertEquals(0, d.count)
+        assertFalse(d.todo)
+    }
+
+    @Test fun `keep entries and protected apps are not suggestions`() {
+        val d = debloatState(ui(listOf(app("com.acme.keep", true), app("com.acme.a", true, protected = UiText(R.string.data_protected_system)))))
+        assertEquals(0, d.total)
+        assertFalse(d.todo)
+    }
+
+    @Test fun `an unknown TV still has something to do`() {
+        assertTrue(debloatState(DeviceUi(lists = Suggestions.NoList(null, emptyList()))).todo)
+    }
+
+    private val store = AppInfo(PLAY_STORE, "Google Play Store", null, true, true, null, "1")
+
+    private fun card(ui: DeviceUi, hidden: Boolean = false) =
+        ui.copy(launcherCardHidden = hidden).let { offerLauncherCard(it, debloatState(it)) }
+
+    @Test fun `the home screen card waits for the list to load`() {
+        val apps = listOf(store, app("com.acme.a", false))
+        assertFalse(card(DeviceUi(apps = apps)))
+        assertFalse(card(DeviceUi(apps = apps, lists = Suggestions.Unavailable)))
+        assertTrue(card(ui(apps)))
+    }
+
+    @Test fun `the home screen card shows once some apps on the list are off, with others kept on`() {
+        // SickTv turned a off; b and c stay on.
+        val some = ui(listOf(store, app("com.acme.a", false), app("com.acme.b", true), app("com.acme.c", true)), listOf(turnedOff("com.acme.a")))
+        assertEquals(1, debloatState(some).off)
+        assertTrue(debloatState(some).todo)
+        assertTrue(card(some))
+    }
+
+    @Test fun `an app on the list turned off before SickTv counts`() {
+        val before = ui(listOf(store, app("com.acme.a", true), app("com.acme.b", false)))
+        assertEquals(1, debloatState(before).off)
+        assertTrue(card(before))
+    }
+
+    @Test fun `the home screen card waits while nothing on the list is off`() {
+        assertFalse(card(ui(listOf(store, app("com.acme.a", true), app("com.acme.b", true)))))
+        // Turned off, then back on after a TV update: nothing on the list is off any more.
+        assertFalse(card(ui(listOf(store, app("com.acme.a", true), app("com.acme.b", true)), listOf(turnedOff("com.acme.a")))))
+        // An app off the list doesn't count.
+        assertFalse(card(ui(listOf(store, app("com.acme.a", true), app("com.other", false)), listOf(turnedOff("com.other")))))
+    }
+
+    @Test fun `the home screen card shows when nothing on the list is left on`() {
+        assertTrue(card(ui(listOf(store, app("com.acme.a", false), app("com.acme.b", false)))))
+    }
+
+    @Test fun `a TV with no list gets the home screen card once that is known`() {
+        assertTrue(card(DeviceUi(apps = listOf(store), lists = Suggestions.NoList(null, emptyList()))))
+    }
+
+    @Test fun `the card's own gates still apply once the TV is cleaned up`() {
+        val done = ui(listOf(store, app("com.acme.a", false)))
+        assertFalse(card(done, hidden = true))
+        assertFalse(card(ui(listOf(app("com.acme.a", false))))) // no Play Store
+    }
+}
