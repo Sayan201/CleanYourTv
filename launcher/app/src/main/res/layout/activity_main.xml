@@ -240,7 +240,7 @@
                     <TextView android:id="@+id/mediaPrevious" android:layout_width="0dp" android:layout_height="0dp" />
                     <TextView android:id="@+id/mediaToggle" android:layout_width="0dp" android:layout_height="0dp" />
                     <TextView android:id="@+id/mediaNext" android:layout_width="0dp" android:layout_height="0dp" />
-                    <View android:id="@+id/mediaInfo" android:layout_width="0dp" android:layout_height="0dp" />
+                    <LinearLayout android:id="@+id/mediaInfo" android:layout_width="0dp" android:layout_height="0dp" />
                 </LinearLayout>
 
             </LinearLayout>

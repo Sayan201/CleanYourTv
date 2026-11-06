@@ -164,6 +164,19 @@
                                 android:includeFontPadding="false" />
 
                             <TextView
+                                android:id="@+id/weatherLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:text="Location"
+                                android:textColor="#FFFFFFFF"
+                                android:textSize="13sp"
+                                android:fontFamily="@font/outfit"
+                                android:letterSpacing="0.06"
+                                android:textAllCaps="true"
+                                android:includeFontPadding="false" />
+
+                            <TextView
                                 android:id="@+id/weatherSource"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
