@@ -40,22 +40,22 @@ remote-related packages; read [the state notes](package-state.md) before applyin
 
 - Five dock slots fill from apps already installed. Long-press an app and choose **Move left**,
   **Move right**, or **App info** to organize them.
-- Seven bundled Unsplash landscape wallpapers rotate in a daily cycle. See
-  [`../../../docs/wallpaper-sources.md`](../../../docs/wallpaper-sources.md) for photo credits.
+- Bing Daily Wallpaper Engine automatically fetches the daily photo, falling back to seven bundled
+  Unsplash landscape wallpapers ([`../../../docs/wallpaper-sources.md`](../../../docs/wallpaper-sources.md)) if offline.
 - The greeting and clock sit above a Celsius weather card. Weather uses the TV's approximate
-  location with Open-Meteo; Gayeshpur is the fallback when Android cannot provide a location.
+  location with Open-Meteo, with automatic IP geolocation fallback when GPS coordinates are unavailable.
 - The media bar below the clock has previous, play/pause, and next controls. If prompted, enable
   CleanYourTV's notification access in TV Settings so it can read active media sessions.
 - A single translucent pill immediately left of **Inputs** shows CPU and used-memory percentages.
 - The Wi-Fi pill shows the connected network name when Android grants the required location access.
 - The first app row has a transparent background. Press Up from a dock app to enter the media row.
-- The low-power Clock screensaver uses a black background and slowly changes position to reduce
-  burn-in. Select **CleanYourTV Clock** in Android TV's screensaver settings, or run:
+- The Standby mode (screensaver) features Bing's daily wallpaper (offset by 1 day to guarantee it never
+  duplicates the Home screen), with a fixed bottom-left clock, date, and contrast scrim. Select
+  **CleanYourTV Clock** in Android TV's screensaver settings, or run:
 
   ```sh
-  TV_HOST=<TV_IP> tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome.custom/com.gathin.tvhome.ClockDream; settings put secure screensaver_enabled 1'
+  TV_HOST=<TV_IP> tools/tv.py 'settings put secure screensaver_components com.sayan.tvhome/.ClockDream; settings put secure screensaver_enabled 1'
   ```
 
 Weather requests go to Open-Meteo over the internet. No API key is needed. The application ID is
-`com.gathin.tvhome.custom`, so the original CleanYourTV install can remain available as a rollback
-option.
+`com.sayan.tvhome`.

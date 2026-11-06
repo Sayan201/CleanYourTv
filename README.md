@@ -7,13 +7,13 @@ This repository documents the home screen, package state, install steps, and rec
 ## The home screen
 
 - **Five app slots in the dock.** It fills from apps installed on the TV. Long-press an app to move it left or right, or open its App info.
-- **Seven scenic wallpapers.** Bundled Unsplash photos rotate daily; the image credits are in [docs/wallpaper-sources.md](docs/wallpaper-sources.md).
+- **Bing Daily Wallpaper Engine with rotation fallback.** Automatically fetches Bing's daily picture with adaptive luminance contrast detection for navigation pills, falling back to bundled Unsplash photos ([docs/wallpaper-sources.md](docs/wallpaper-sources.md)) if offline.
 - **Greeting, clock, and weather.** Weather is shown in Celsius using approximate device location and Open-Meteo, with automatic IP-based geolocation fallback.
 - **A wide weather bar below the clock.** Displays live temperature and condition on the left, with local city name and source on the right.
 - **A combined CPU and memory tile.** One translucent button-style tile shows both usage percentages immediately to the left of Inputs.
 - **Inputs, Wi-Fi, and Settings tiles.** The Wi-Fi tile shows the connected network name when Android grants location access.
 - **A macOS-style liquid glass capsule first app row.**
-- **A lightweight clock screensaver.** It uses a black background and slowly moves the clock to reduce burn-in.
+- **Standby mode (Daydream screensaver) with distinct daily wallpaper.** Displays yesterday's Bing daily photo (guaranteed distinct from the Home screen's wallpaper) with a fixed bottom-left clock, date, and soft contrast scrim.
 - **Remote navigation fixes.** Pressing Right on the dock's last app automatically wraps to the next row, and focus stays within the correct home-screen row.
 
 The original customized launcher is the native Android app in the `launcher` folder, with application ID `com.sayan.tvhome`.
