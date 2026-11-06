@@ -78,38 +78,39 @@ public class DockDecoration extends RecyclerView.ItemDecoration {
 
         if (!found) return;
 
-        // Insets around the dock cards to form the glass tray
-        float padH = 14f * density;
+        // Insets around the dock cards to form the macOS-like capsule dock
+        float padH = 18f * density;
         float padV = 10f * density;
         bounds.set(minLeft - padH, minTop - padV, maxRight + padH, maxBottom + padV);
+        float capsuleRadius = Math.min(bounds.height() / 2f, 26f * density);
 
         // Translucent liquid glass gradient fill
         fill.setShader(new LinearGradient(0, bounds.top, 0, bounds.bottom,
-                0x2EFFFFFF, 0x12FFFFFF, Shader.TileMode.CLAMP));
+                0x33FFFFFF, 0x14FFFFFF, Shader.TileMode.CLAMP));
 
-        // Specular sheen across top 42%
-        specular.setShader(new LinearGradient(0, bounds.top, 0, bounds.top + bounds.height() * 0.42f,
-                0x45FFFFFF, 0x00FFFFFF, Shader.TileMode.CLAMP));
+        // Specular sheen across top 40%
+        specular.setShader(new LinearGradient(0, bounds.top, 0, bounds.top + bounds.height() * 0.40f,
+                0x50FFFFFF, 0x00FFFFFF, Shader.TileMode.CLAMP));
 
-        // Outer ambient glow
+        // Outer ambient glow / shadow
         for (int i = 1; i <= 2; i++) {
-            glow.setStrokeWidth(i * 2f * density);
-            glow.setColor((0x14 / i) << 24 | 0xFFFFFF);
+            glow.setStrokeWidth(i * 2.5f * density);
+            glow.setColor((0x15 / i) << 24 | 0xFFFFFF);
             float o = i * density;
             c.drawRoundRect(bounds.left - o, bounds.top - o, bounds.right + o, bounds.bottom + o,
-                    radius + o, radius + o, glow);
+                    capsuleRadius + o, capsuleRadius + o, glow);
         }
 
         // Base glass slab
-        c.drawRoundRect(bounds, radius, radius, fill);
+        c.drawRoundRect(bounds, capsuleRadius, capsuleRadius, fill);
 
         // Top specular reflection
         c.save();
-        c.clipRect(bounds.left, bounds.top, bounds.right, bounds.top + bounds.height() * 0.42f);
-        c.drawRoundRect(bounds, radius, radius, specular);
+        c.clipRect(bounds.left, bounds.top, bounds.right, bounds.top + bounds.height() * 0.40f);
+        c.drawRoundRect(bounds, capsuleRadius, capsuleRadius, specular);
         c.restore();
 
         // Crisp glass rim
-        c.drawRoundRect(bounds, radius, radius, rim);
+        c.drawRoundRect(bounds, capsuleRadius, capsuleRadius, rim);
     }
 }

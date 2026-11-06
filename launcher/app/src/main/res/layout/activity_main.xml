@@ -78,46 +78,6 @@
                         android:fontFamily="@font/outfit_medium"
                         android:letterSpacing="0.22"
                         android:textAllCaps="true" />
-
-                    <LinearLayout
-                        android:id="@+id/weatherPill"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="18dp"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:background="@drawable/media_bar_bg"
-                        android:focusable="true"
-                        android:clickable="true"
-                        android:contentDescription="Local weather. Select to refresh.">
-
-                        <TextView
-                            android:id="@+id/weatherSummary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:text="Loading local weather…"
-                            android:textColor="#EFFFFFFF"
-                            android:textSize="12sp"
-                            android:fontFamily="@font/outfit_medium"
-                            android:includeFontPadding="false" />
-
-                        <TextView
-                            android:id="@+id/weatherSource"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:text="Gayeshpur · Open-Meteo"
-                            android:textColor="#9FFFFFFF"
-                            android:textSize="9sp"
-                            android:fontFamily="@font/outfit_regular"
-                            android:letterSpacing="0.02"
-                            android:includeFontPadding="false" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -206,81 +166,62 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/mediaBar"
+                    android:id="@+id/weatherPill"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="7dp"
-                    android:background="@drawable/media_bar_bg">
-
-                    <TextView
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="♫"
-                        android:textColor="#D9FFFFFF"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/outfit_medium"
-                        android:importantForAccessibility="no" />
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:background="@drawable/media_bar_bg"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:contentDescription="Local weather. Select to refresh.">
 
                     <LinearLayout
-                        android:id="@+id/mediaInfo"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical"
-                        android:paddingStart="6dp"
-                        android:paddingEnd="8dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="@drawable/media_info_focus_bg">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/mediaTitle"
-                            android:layout_width="match_parent"
+                            android:id="@+id/weatherSummary"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:ellipsize="end"
-                            android:text="Nothing playing"
+                            android:text="Loading local weather…"
                             android:textColor="#EFFFFFFF"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
                             android:fontFamily="@font/outfit_medium"
                             android:includeFontPadding="false" />
 
                         <TextView
-                            android:id="@+id/mediaArtist"
-                            android:layout_width="match_parent"
+                            android:id="@+id/weatherSource"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:ellipsize="end"
-                            android:text="Media controls"
+                            android:text="Gayeshpur · Open-Meteo"
                             android:textColor="#9FFFFFFF"
                             android:textSize="10sp"
                             android:fontFamily="@font/outfit_regular"
+                            android:letterSpacing="0.02"
                             android:includeFontPadding="false" />
                     </LinearLayout>
+                </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/mediaPrevious"
-                        style="@style/MediaControl"
-                        android:text="‹"
-                        android:contentDescription="Previous track" />
-
-                    <TextView
-                        android:id="@+id/mediaToggle"
-                        style="@style/MediaControl"
-                        android:text="▶"
-                        android:contentDescription="Play or pause" />
-
-                    <TextView
-                        android:id="@+id/mediaNext"
-                        style="@style/MediaControl"
-                        android:text="›"
-                        android:contentDescription="Next track" />
+                <!-- Hidden media bar stub so existing media callbacks/views don't NPE -->
+                <LinearLayout
+                    android:id="@+id/mediaBar"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone">
+                    <TextView android:id="@+id/mediaTitle" android:layout_width="0dp" android:layout_height="0dp" />
+                    <TextView android:id="@+id/mediaArtist" android:layout_width="0dp" android:layout_height="0dp" />
+                    <TextView android:id="@+id/mediaPrevious" android:layout_width="0dp" android:layout_height="0dp" />
+                    <TextView android:id="@+id/mediaToggle" android:layout_width="0dp" android:layout_height="0dp" />
+                    <TextView android:id="@+id/mediaNext" android:layout_width="0dp" android:layout_height="0dp" />
+                    <View android:id="@+id/mediaInfo" android:layout_width="0dp" android:layout_height="0dp" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -339,9 +339,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             else requestWeatherLocationPermission();
         });
         weatherPill.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                focusMediaBar();
-                return true;
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                    focusTile(lastFocused % COLUMNS);
+                    return true;
+                }
+                if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    View target = stats != null && stats.getVisibility() == View.VISIBLE ? stats : btnInputs;
+                    if (target != null) target.requestFocus();
+                    return true;
+                }
             }
             return false;
         });
@@ -784,8 +791,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         return enabled != null && enabled.contains(getPackageName());
     }
 
-    /** Enters the media strip from the dock; use its permission prompt while no session is available. */
+    /** Enters the weather/media strip from the dock. */
     private void focusMediaBar() {
+        if (weatherPill != null && weatherPill.getVisibility() == View.VISIBLE) {
+            weatherPill.requestFocus();
+            return;
+        }
         View target = activeMedia != null && mediaToggle != null && mediaToggle.isEnabled()
                 ? mediaToggle : mediaInfo;
         if (target != null) target.requestFocus();
