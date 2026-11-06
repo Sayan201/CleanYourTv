@@ -1,16 +1,19 @@
-name: Publish CleanYourTV APK
+name: Publish Releases
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   build-and-release:
-    name: Build and publish Android TV APK
+    name: Build and publish CleanYourTv & SickTv APKs
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
@@ -27,41 +30,76 @@ jobs:
         with:
           packages: platforms;android-34 build-tools;34.0.0
 
+      - name: Accept Android licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Configure release signing
+      - name: Configure optional custom signing
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          test -n "$ANDROID_KEYSTORE_BASE64" || { echo "Missing GitHub Actions secret: ANDROID_KEYSTORE_BASE64"; exit 1; }
-          test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo "Missing GitHub Actions secret: ANDROID_KEYSTORE_PASSWORD"; exit 1; }
-          test -n "$ANDROID_KEY_ALIAS" || { echo "Missing GitHub Actions secret: ANDROID_KEY_ALIAS"; exit 1; }
-          test -n "$ANDROID_KEY_PASSWORD" || { echo "Missing GitHub Actions secret: ANDROID_KEY_PASSWORD"; exit 1; }
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/cleanyourtv-release.jks"
-          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
-          echo "ANDROID_KEYSTORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
-          echo "ANDROID_KEY_ALIAS=$ANDROID_KEY_ALIAS" >> "$GITHUB_ENV"
-          echo "ANDROID_KEY_PASSWORD=$ANDROID_KEY_PASSWORD" >> "$GITHUB_ENV"
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/cleanyourtv-release.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+            echo "ANDROID_KEYSTORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
+            echo "ANDROID_KEY_ALIAS=$ANDROID_KEY_ALIAS" >> "$GITHUB_ENV"
+            echo "ANDROID_KEY_PASSWORD=$ANDROID_KEY_PASSWORD" >> "$GITHUB_ENV"
+            echo "RELEASE_KEYSTORE=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+            echo "RELEASE_KEY_PASSWORD=$ANDROID_KEY_PASSWORD" >> "$GITHUB_ENV"
+            echo "RELEASE_KEY_ALIAS=$ANDROID_KEY_ALIAS" >> "$GITHUB_ENV"
+          else
+            echo "No custom secrets provided, using deterministic repository keystore."
+          fi
 
-      - name: Build standalone APK
+      - name: Build CleanYourTv launcher APKs
         working-directory: launcher
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon :standalone:assembleRelease
+          ./gradlew --no-daemon :app:assembleRelease :standalone:assembleRelease
+
+      - name: Build SickTv companion APK
+        working-directory: launcher/companion
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon :app:assembleGithubRelease
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+          cp launcher/app/build/outputs/apk/release/app-release.apk release-assets/app-release.apk
+          cp launcher/app/build/outputs/apk/release/app-release.apk release-assets/cleanyourtv-launcher.apk
+          cp launcher/standalone/build/outputs/apk/release/standalone-release.apk release-assets/cleanyourtv-standalone.apk
+          cp launcher/companion/app/build/outputs/apk/github/release/app-github-release.apk release-assets/sicktv-companion.apk
+          ls -la release-assets
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: CleanYourTV ${{ github.ref_name }}
-          generate_release_notes: true
-          files: launcher/standalone/build/outputs/apk/release/standalone-release.apk
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
+          name: ${{ github.ref_type == 'tag' && format('CleanYourTv & SickTv {0}', github.ref_name) || 'CleanYourTv & SickTv (Latest Build)' }}
+          draft: false
+          prerelease: false
+          make_latest: true
+          generate_release_notes: ${{ github.ref_type == 'tag' }}
+          files: |
+            release-assets/app-release.apk
+            release-assets/cleanyourtv-launcher.apk
+            release-assets/sicktv-companion.apk
+            release-assets/cleanyourtv-standalone.apk
           body: |
-            ## CleanYourTV Android TV app
+            ## CleanYourTv & SickTv Companion
 
-            Download **standalone-release.apk** below and install it on your compatible Android TV device.
+            Official signed Android APK packages for your Android TV and Android phone.
 
-            This package is signed with the project's persistent release key and distributed through GitHub Releases for sideloading. It is not distributed through Google Play.
+            ### Downloads
+            - **`app-release.apk`** / **`cleanyourtv-launcher.apk`**: CleanYourTv Launcher for Android TV (`com.sayan.tvhome`).
+            - **`sicktv-companion.apk`**: SickTv Companion app for Android phones (`app.sicktv`). Features wireless ADB TV connection, 1-click debloating with device-specific profiles, and seamless launcher installer.
+            - **`cleanyourtv-standalone.apk`**: Standalone CleanYourTv build (`com.sayan.cleanyourtv`).
+
+            ---
+            *Signed with project release key for persistent sideloading and verified updates.*

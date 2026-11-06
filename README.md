@@ -54,6 +54,14 @@ The companion mobile app **SickTv** (`app.sicktv`) runs directly on your Android
 4. Select your TV, review the debloat list for your model, and tap to disable bloatware.
 5. Select **CleanYourTV** from the launcher list to automatically download and install `com.sayan.tvhome` as your default home screen.
 
+## Downloads & GitHub Releases
+
+Every push to `main` automatically builds, signs, and publishes the latest APK packages to the repository's [GitHub Releases](https://github.com/Sayan201/CleanYourTv/releases):
+
+- **`app-release.apk` / `cleanyourtv-launcher.apk`**: CleanYourTv Launcher for Android TV (`com.sayan.tvhome`).
+- **`sicktv-companion.apk`**: SickTv Companion app for Android phones (`app.sicktv`).
+- **`cleanyourtv-standalone.apk`**: Standalone CleanYourTv build (`com.sayan.cleanyourtv`).
+
 ## Useful files
 
 | Path | Purpose |
