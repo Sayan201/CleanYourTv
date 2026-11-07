@@ -10,8 +10,8 @@ android {
         applicationId 'com.sayan.tvhome'
         minSdk 26
         targetSdk 34
-        versionCode 5
-        versionName '1.0-custom'
+        versionCode 6
+        versionName '2.1.0'
         buildConfigField "long", "BUILD_TIME", "${System.currentTimeMillis()}L"
     }
 
