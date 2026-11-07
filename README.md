@@ -6,15 +6,22 @@ This repository provides the launcher app, mobile companion installer, package m
 
 ## The home screen
 
-- **Five app slots in the dock.** It fills from apps installed on the TV. Long-press an app to move it left or right, or open its App info.
+- **Customizable app slots in the dock (3 to 6 apps per row).** Configurable directly from Launcher Settings, with intelligent focus navigation and wrapping. Long-press an app to open a modern liquid-glass flyout menu to move it left/right or open its App Info.
 - **Bing Daily Wallpaper Engine with rotation fallback.** Automatically fetches Bing's daily picture with adaptive luminance contrast detection for navigation pills, falling back to bundled Unsplash photos ([docs/wallpaper-sources.md](docs/wallpaper-sources.md)) if offline.
 - **Greeting, clock, and weather.** Weather is shown in Celsius using approximate device location and Open-Meteo, with automatic IP-based geolocation fallback.
 - **A wide weather bar below the clock.** Displays live temperature and condition on the left, with local city name and source on the right.
 - **A combined CPU and memory tile.** One translucent button-style tile shows both usage percentages immediately to the left of Inputs.
-- **Inputs, Wi-Fi, and Settings tiles.** The Wi-Fi tile shows the connected network name when Android grants location access.
-- **A macOS-style liquid glass capsule first app row.**
-- **Standby mode (Daydream screensaver) with distinct daily wallpaper.** Displays yesterday's Bing daily photo (guaranteed distinct from the Home screen's wallpaper) with a fixed bottom-left clock, date, and soft contrast scrim.
-- **Remote navigation fixes.** Pressing Right on the dock's last app automatically wraps to the next row, and focus stays within the correct home-screen row.
+- **Liquid-glass Inputs, Wi-Fi, and Settings pills.**
+  - **Inputs flyout:** Smooth glass panel showing all active TV input sources.
+  - **Settings flyout:** 2-option menu offering quick access to **System Settings** and **Launcher Settings**.
+  - **GitHub Update Checker:** Checks GitHub Releases for new updates and highlights the Settings pill and Launcher Settings with a notification dot badge.
+- **Launcher Settings:**
+  - Choose dock row column count (3, 4, 5, or 6 apps per row).
+  - Configurable screensaver idle timer (3 min, 5 min, 10 min, 15 min, or Never).
+  - 1-tap screensaver preview and shortcut to TV Screensaver settings.
+  - In-app GitHub release update check and download.
+- **Standby mode & Ambient Screensaver.** Fixed direct-to-sleep issues with official Android TV `dream_info` metadata, `FLAG_KEEP_SCREEN_ON`, and an in-app idle timeout fallback that displays yesterday's Bing daily photo with bottom-left clock and soft contrast scrim.
+- **Remote navigation.** Seamless directional navigation across dock and app rows with focus preservation.
 
 The original customized launcher is the native Android app in the `launcher` folder, with application ID `com.sayan.tvhome`.
 
