@@ -66,7 +66,14 @@ public final class UpdateChecker {
     public static void check(Context context, Callback callback) {
         EXECUTOR.execute(() -> {
             try {
-                long appBuildTime = BuildConfig.BUILD_TIME;
+                long appBuildTime = 0L;
+                String currentVerName = "1.0";
+                try {
+                    android.content.pm.PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                    appBuildTime = pi.lastUpdateTime;
+                    if (pi.versionName != null) currentVerName = pi.versionName;
+                } catch (Exception ignored) {}
+
                 long updateTimestamp = 0L;
                 String versionName = "Latest Release";
                 String downloadUrl = DEFAULT_APK_URL;
@@ -75,7 +82,7 @@ public final class UpdateChecker {
                 HttpURLConnection conn = (HttpURLConnection) new URL(GITHUB_RELEASE_URL).openConnection();
                 conn.setConnectTimeout(8000);
                 conn.setReadTimeout(10000);
-                conn.setRequestProperty("User-Agent", "CleanYourTV-Launcher/" + BuildConfig.VERSION_NAME);
+                conn.setRequestProperty("User-Agent", "CleanYourTV-Launcher/" + currentVerName);
 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     String json = readStream(conn.getInputStream());
@@ -112,7 +119,7 @@ public final class UpdateChecker {
                     HttpURLConnection commitConn = (HttpURLConnection) new URL(GITHUB_FALLBACK_COMMITS_URL).openConnection();
                     commitConn.setConnectTimeout(8000);
                     commitConn.setReadTimeout(10000);
-                    commitConn.setRequestProperty("User-Agent", "CleanYourTV-Launcher/" + BuildConfig.VERSION_NAME);
+                    commitConn.setRequestProperty("User-Agent", "CleanYourTV-Launcher/" + currentVerName);
                     if (commitConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         String commitJson = readStream(commitConn.getInputStream());
                         JSONObject commitObj = new JSONObject(commitJson);
@@ -197,7 +204,7 @@ public final class UpdateChecker {
                 conn.setConnectTimeout(10000);
                 conn.setReadTimeout(20000);
                 conn.setInstanceFollowRedirects(true);
-                conn.setRequestProperty("User-Agent", "CleanYourTV-Launcher/" + BuildConfig.VERSION_NAME);
+                conn.setRequestProperty("User-Agent", "CleanYourTV-Launcher");
 
                 int fileLength = conn.getContentLength();
                 in = conn.getInputStream();
