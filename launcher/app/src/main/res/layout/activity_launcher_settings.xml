@@ -35,11 +35,81 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
+            <TextView android:id="@+id/columns3" style="@style/SettingsColumnChoice" android:text="3" />
             <TextView android:id="@+id/columns4" style="@style/SettingsColumnChoice" android:text="4" />
             <TextView android:id="@+id/columns5" style="@style/SettingsColumnChoice" android:text="5" />
             <TextView android:id="@+id/columns6" style="@style/SettingsColumnChoice" android:text="6" />
-            <TextView android:id="@+id/columns7" style="@style/SettingsColumnChoice" android:text="7" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/updateChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="28dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp">
+
+            <ImageView
+                android:id="@+id/updateIcon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_update"
+                android:tint="#FFFFFFFF"
+                android:duplicateParentState="true"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/updateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/check_updates"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp"
+                    android:fontFamily="@font/outfit_medium" />
+
+                <TextView
+                    android:id="@+id/updateStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/update_ready_hint"
+                    android:textColor="#FFACB8C1"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/updateDot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/notification_dot"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/screensaverTimeoutChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="18dp" />
+
+        <TextView
+            android:id="@+id/screensaverPreviewChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="10dp"
+            android:text="@string/screensaver_preview" />
+
+        <TextView
+            android:id="@+id/screensaverSettingsChoice"
+            style="@style/SettingsRow"
+            android:layout_marginTop="10dp"
+            android:text="@string/screensaver_settings" />
 
         <TextView
             android:id="@+id/animationsChoice"

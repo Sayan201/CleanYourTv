@@ -13,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -228,6 +229,31 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private AppLibraryDialog appLibrary;
     private boolean libraryFocusPending;
     private RecyclerView.OnScrollListener pendingFocusScroll;
+    private View settingsDot;
+    private boolean isPaused = false;
+    private final Handler idleHandler = new Handler(Looper.getMainLooper());
+    private final Runnable idleRunnable = () -> {
+        if (!isFinishing() && !isPaused && hasWindowFocus() && openPopup == null) {
+            startActivity(new Intent(MainActivity.this, ScreensaverActivity.class));
+        }
+    };
+
+    private void resetIdleTimer() {
+        idleHandler.removeCallbacks(idleRunnable);
+        if (isFinishing() || isPaused) return;
+        SharedPreferences choices = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE);
+        int timeoutMin = choices.getInt("screensaver_timeout_min", 5);
+        if (timeoutMin > 0) {
+            idleHandler.postDelayed(idleRunnable, timeoutMin * 60_000L);
+        }
+    }
+
+    private void refreshSettingsPillUpdateBadge() {
+        if (settingsDot != null) {
+            boolean hasUpdate = UpdateChecker.isUpdateAvailable(this);
+            settingsDot.setVisibility(hasUpdate ? View.VISIBLE : View.GONE);
+        }
+    }
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     /** Refreshes the network pill when the connection changes: at boot Wi-Fi often connects after Home is shown. */
@@ -562,20 +588,23 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
         btnInputs = findViewById(R.id.btnInputs);
         View btnSettings = findViewById(R.id.btnSettings);
+        settingsDot = findViewById(R.id.settingsDot);
         btnInputs.setOnClickListener(v -> showInputs());
         btnWifi.setOnClickListener(v -> onWifiPillClicked());
         btnWifi.setOnLongClickListener(v -> {
             open(systemIntent(Settings.ACTION_WIFI_SETTINGS));
             return true;
         });
-        btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
-        btnReorder = findViewById(R.id.btnReorder);
-        btnReorder.setOnClickListener(v -> toggleReorder());
-        btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
+        btnSettings.setOnClickListener(v -> showSettingsMenu());
         btnSettings.setOnLongClickListener(v -> {
             showSettingsMenu();
             return true;
         });
+        btnReorder = findViewById(R.id.btnReorder);
+        btnReorder.setOnClickListener(v -> toggleReorder());
+        btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
+        refreshSettingsPillUpdateBadge();
+        UpdateChecker.check(this, (hasUpdate, ver, url, body) -> refreshSettingsPillUpdateBadge());
 
         // Keep focus on the top bar at its ends and at the top: Android's focus finder would otherwise
         // jump to a tile far below when there is nothing in that direction.
@@ -1125,6 +1154,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onResume() {
         super.onResume();
+        isPaused = false;
+        resetIdleTimer();
+        refreshSettingsPillUpdateBadge();
         // A festival that started or ended while Home was in the background: rebuild with or without it.
         if (festive != festival.active(LocalDate.now())) {
             recreate();
@@ -1246,10 +1278,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         stopStats();
         if (diya != null) diya.stop();
         cancelPendingFocusScroll();
+        isPaused = true;
+        idleHandler.removeCallbacks(idleRunnable);
         // Nothing of ours stays on screen over another app; an undecided prompt simply returns next time.
         if (cardPrompt != null) cardPrompt.dismiss();
         if (appLibrary != null) appLibrary.close();
         if (openPopup != null) openPopup.dismiss();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        resetIdleTimer();
     }
 
     @Override
@@ -1314,6 +1354,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        resetIdleTimer();
         if (handleSettingsKey(event)) return true;
         if (!reordering) return super.dispatchKeyEvent(event);
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
@@ -1568,30 +1609,61 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     public void onTileLongPressed(int position, AppAdapter.Entry entry) {
         if (entry.kind == AppAdapter.Entry.EMPTY || entry.kind == AppAdapter.Entry.HOME_SETTINGS) return;
-        ArrayList<String> labels = new ArrayList<>();
-        ArrayList<Integer> actions = new ArrayList<>();
-        if (position > 0 && position < adapter.movableCount()) {
-            labels.add(getString(R.string.tile_move_left));
-            actions.add(-1);
+
+        RecyclerView.ViewHolder holder = grid.findViewHolderForAdapterPosition(position);
+        View anchor = holder != null ? holder.itemView : grid;
+
+        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
+        LinearLayout rows = panel.findViewById(R.id.rows);
+        PopupWindow popup = glassPopup(panel, (int) (220 * density));
+
+        // Header with app icon and title
+        View headerRow = getLayoutInflater().inflate(R.layout.item_input, rows, false);
+        headerRow.setFocusable(false);
+        headerRow.setClickable(false);
+        headerRow.setBackground(null);
+        ImageView appIcon = headerRow.findViewById(R.id.icon);
+        if (entry.icon != null) {
+            appIcon.setImageDrawable(entry.icon);
+            appIcon.setImageTintList(null);
+            appIcon.setVisibility(View.VISIBLE);
+        } else {
+            appIcon.setVisibility(View.GONE);
         }
-        if (position >= 0 && position + 1 < adapter.movableCount()) {
-            labels.add(getString(R.string.tile_move_right));
-            actions.add(1);
+        headerRow.findViewById(R.id.dot).setVisibility(View.GONE);
+        headerRow.findViewById(R.id.status).setVisibility(View.GONE);
+        TextView titleView = headerRow.findViewById(R.id.title);
+        titleView.setText(entry.label);
+        titleView.setTextColor(0xFFFFFFFF);
+        rows.addView(headerRow);
+
+        addSeparator(rows);
+
+        boolean hasMoveLeft = position > 0 && position < adapter.movableCount();
+        if (hasMoveLeft) {
+            addSettingsMenuRow(rows, popup, R.drawable.ic_arrow_back, R.string.tile_move_left, false, null, () -> {
+                moveTileOne(position, -1);
+            });
         }
-        labels.add(getString(R.string.library_app_info));
-        actions.add(0);
-        new AlertDialog.Builder(this)
-                .setTitle(entry.label)
-                .setItems(labels.toArray(new String[0]), (dialog, which) -> {
-                    int action = actions.get(which);
-                    if (action == 0) {
-                        open(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.parse("package:" + entry.pkg)));
-                    } else {
-                        moveTileOne(position, action);
-                    }
-                })
-                .show();
+
+        boolean hasMoveRight = position >= 0 && position + 1 < adapter.movableCount();
+        if (hasMoveRight) {
+            addSettingsMenuRow(rows, popup, R.drawable.ic_arrow_forward, R.string.tile_move_right, false, null, () -> {
+                moveTileOne(position, 1);
+            });
+        }
+
+        addSettingsMenuRow(rows, popup, R.drawable.ic_info, R.string.library_app_info, false, null, () -> {
+            open(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + entry.pkg)));
+        });
+
+        panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        popup.setWidth(Math.max((int) (220 * density), panel.getMeasuredWidth()));
+        dropIn(popup, panel, anchor, Gravity.CENTER_HORIZONTAL);
+
+        if (rows.getChildCount() > 2) {
+            rows.getChildAt(2).requestFocus();
+        }
     }
 
     private void moveTileOne(int from, int delta) {
@@ -2499,29 +2571,61 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     // ---- launcher settings and module cards -------------------------------------------------------
 
-    /** Keep a normal Settings click for the TV; the launcher's choices live behind hold OK. */
+    /** Settings pill flyout: System Settings and Launcher Settings (with update notification). */
     private void showSettingsMenu() {
         View anchor = findViewById(R.id.btnSettings);
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
-        PopupWindow popup = glassPopup(panel, (int) (200 * density));
-        addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
-                new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
-        if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
-        addSettingsMenuRow(rows, popup, R.string.reorder, this::toggleReorder);
+        PopupWindow popup = glassPopup(panel, (int) (220 * density));
+
+        // 1: System settings
+        addSettingsMenuRow(rows, popup, R.drawable.ic_settings, R.string.tv_settings, false, null, () -> {
+            open(systemIntent(Settings.ACTION_SETTINGS));
+        });
+
+        // 2: Launcher settings
+        boolean hasUpdate = UpdateChecker.isUpdateAvailable(this);
+        addSettingsMenuRow(rows, popup, R.drawable.ic_home_settings, R.string.launcher_settings, hasUpdate,
+                hasUpdate ? getString(R.string.update_available_title) : null, () -> startActivityForResult(
+                        new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
+
+        if (moduleCards) {
+            addSettingsMenuRow(rows, popup, R.drawable.ic_apps, R.string.module_cards, false, null, this::showModuleCards);
+        }
+        if (btnReorder != null && btnReorder.getVisibility() == View.VISIBLE) {
+            addSettingsMenuRow(rows, popup, R.drawable.ic_swap_vert, R.string.reorder, false, null, this::toggleReorder);
+        }
+
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        popup.setWidth(Math.max((int) (200 * density), panel.getMeasuredWidth()));
-        // Hebrew puts Settings at the left of the header: grow the menu inward from it.
+        popup.setWidth(Math.max((int) (220 * density), panel.getMeasuredWidth()));
         dropIn(popup, panel, anchor, getResources().getBoolean(R.bool.rtl_menu_bar)
                 ? Gravity.START : Gravity.END);
         rows.getChildAt(0).requestFocus();
     }
 
-    private void addSettingsMenuRow(LinearLayout rows, PopupWindow popup, int title, Runnable action) {
+    private void addSettingsMenuRow(LinearLayout rows, PopupWindow popup, int iconRes, int title, boolean showDot, String statusText, Runnable action) {
         View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
-        row.findViewById(R.id.icon).setVisibility(View.GONE);
-        row.findViewById(R.id.dot).setVisibility(View.GONE);
-        row.findViewById(R.id.status).setVisibility(View.GONE);
+        ImageView iconView = row.findViewById(R.id.icon);
+        if (iconRes != 0) {
+            iconView.setImageResource(iconRes);
+            iconView.setVisibility(View.VISIBLE);
+        } else {
+            iconView.setVisibility(View.GONE);
+        }
+        View dot = row.findViewById(R.id.dot);
+        if (showDot) {
+            dot.setBackgroundResource(R.drawable.notification_dot);
+            dot.setVisibility(View.VISIBLE);
+        } else {
+            dot.setVisibility(View.GONE);
+        }
+        TextView status = row.findViewById(R.id.status);
+        if (statusText != null && !statusText.isEmpty()) {
+            status.setText(statusText);
+            status.setVisibility(View.VISIBLE);
+        } else {
+            status.setVisibility(View.GONE);
+        }
         ((TextView) row.findViewById(R.id.title)).setText(title);
         row.setOnClickListener(v -> {
             popup.dismiss();

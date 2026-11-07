@@ -107,4 +107,12 @@
     <string name="media_access_hint">פתח את הגדרות הטלוויזיה ואפשר גישה להתראות כדי להציג מה מתנגן ולשלוט בו.</string>
     <string name="media_nothing_playing">לא מתנגן דבר</string>
     <string name="media_controls_setup">הגדרת פקדי מדיה</string>
+    <string name="check_updates">בדוק עדכונים</string>
+    <string name="update_available_title">עדכון זמין</string>
+    <string name="update_checking">בודק עדכונים…</string>
+    <string name="up_to_date">CleanYourTV מעודכן</string>
+    <string name="update_ready_hint">עדכון חדש זמין ב־GitHub</string>
+    <string name="screensaver_preview">תצוגה מקדימה של שומר מסך</string>
+    <string name="screensaver_settings">הגדרות שומר מסך של הטלוויזיה</string>
+    <string name="screensaver_idle_state">שומר מסך פעיל: %1$s</string>
 </resources>

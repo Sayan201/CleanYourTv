@@ -109,4 +109,12 @@
     <string name="media_access_hint">Open TV settings and allow notification access to show what is playing and control it.</string>
     <string name="media_nothing_playing">Nothing playing</string>
     <string name="media_controls_setup">Set up media controls</string>
+    <string name="check_updates">Check for updates</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="up_to_date">CleanYourTV is up to date</string>
+    <string name="update_ready_hint">New update ready on GitHub</string>
+    <string name="screensaver_preview">Preview screensaver</string>
+    <string name="screensaver_settings">TV screensaver settings</string>
+    <string name="screensaver_idle_state">Ambient screensaver: %1$s</string>
 </resources>

@@ -25,6 +25,9 @@ public class ClockDream extends DreamService {
         setInteractive(false); // Any remote key wakes the TV back to where it was.
         setFullscreen(true);
         setScreenBright(true); // Maintain vibrant wallpaper display
+        if (getWindow() != null) {
+            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
         setContentView(R.layout.dream_clock);
         wallpaperView = findViewById(R.id.dreamWallpaper);
         bingClient = new BingWallpaperClient(this);
