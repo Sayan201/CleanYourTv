@@ -52,15 +52,35 @@ jobs:
           KEY_PASS="${ANDROID_KEY_PASSWORD:-${RELEASE_KEY_PASSWORD:-$STORE_PASS}}"
 
           if [ -n "$KEYSTORE_DATA" ]; then
-            echo "$KEYSTORE_DATA" | base64 --decode > "$RUNNER_TEMP/cleanyourtv-release.jks"
-            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
-            echo "ANDROID_KEYSTORE_PASSWORD=$STORE_PASS" >> "$GITHUB_ENV"
-            echo "ANDROID_KEY_ALIAS=$KEY_AL" >> "$GITHUB_ENV"
-            echo "ANDROID_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
-            echo "RELEASE_KEYSTORE=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
-            echo "RELEASE_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
-            echo "RELEASE_KEY_ALIAS=$KEY_AL" >> "$GITHUB_ENV"
-            echo "Custom GitHub signing keystore configured successfully."
+            echo "$KEYSTORE_DATA" | base64 --decode > "$RUNNER_TEMP/cleanyourtv-release.jks" || true
+            if keytool -list -keystore "$RUNNER_TEMP/cleanyourtv-release.jks" -storepass "$STORE_PASS" -alias "$KEY_AL" >/dev/null 2>&1; then
+              echo "Custom GitHub keystore verified successfully with alias '$KEY_AL'."
+              echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+              echo "ANDROID_KEYSTORE_PASSWORD=$STORE_PASS" >> "$GITHUB_ENV"
+              echo "ANDROID_KEY_ALIAS=$KEY_AL" >> "$GITHUB_ENV"
+              echo "ANDROID_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+              echo "RELEASE_KEYSTORE=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+              echo "RELEASE_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+              echo "RELEASE_KEY_ALIAS=$KEY_AL" >> "$GITHUB_ENV"
+            elif keytool -list -keystore "$RUNNER_TEMP/cleanyourtv-release.jks" -storepass "$STORE_PASS" >/dev/null 2>&1; then
+              DETECTED_ALIAS=$(keytool -list -keystore "$RUNNER_TEMP/cleanyourtv-release.jks" -storepass "$STORE_PASS" | grep -i 'PrivateKeyEntry' | head -n 1 | awk -F',' '{print $1}' | tr -d ' ')
+              if [ -n "$DETECTED_ALIAS" ]; then
+                echo "Custom GitHub keystore unlocked; detected private key alias: '$DETECTED_ALIAS'."
+                echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+                echo "ANDROID_KEYSTORE_PASSWORD=$STORE_PASS" >> "$GITHUB_ENV"
+                echo "ANDROID_KEY_ALIAS=$DETECTED_ALIAS" >> "$GITHUB_ENV"
+                echo "ANDROID_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+                echo "RELEASE_KEYSTORE=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+                echo "RELEASE_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+                echo "RELEASE_KEY_ALIAS=$DETECTED_ALIAS" >> "$GITHUB_ENV"
+              else
+                echo "WARNING: Custom keystore unlocked but no PrivateKeyEntry found; falling back to repo keystore."
+                rm -f "$RUNNER_TEMP/cleanyourtv-release.jks"
+              fi
+            else
+              echo "WARNING: Custom keystore could not be unlocked with provided secret credentials; falling back to repo keystore."
+              rm -f "$RUNNER_TEMP/cleanyourtv-release.jks"
+            fi
           else
             echo "No custom secrets provided, using deterministic repository keystore."
           fi
@@ -69,7 +89,7 @@ jobs:
         working-directory: launcher
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon :app:assembleRelease
+          ./gradlew --no-daemon :app:assembleRelease --stacktrace
 
       - name: Build SickTv companion APK
         working-directory: launcher/companion
