@@ -441,6 +441,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         findViewById(R.id.mediaToggle).setOnClickListener(v -> controlMedia(MediaAction.TOGGLE));
         findViewById(R.id.mediaNext).setOnClickListener(v -> controlMedia(MediaAction.NEXT));
         showStats = cfg.showStats;
+        if (!showStats && stats != null) {
+            stats.setVisibility(View.GONE);
+        }
         shamsi = cfg.shamsiDate;
         greetingName = cfg.greetingName;
         if (shamsi) {
@@ -1895,7 +1898,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         statsThread.quit();
         statsThread = null;
         statsBg = null;
-        stats.setVisibility(View.GONE);
+        // Keep stats tile visible with its last readings while launcher is paused so side panels don't hide it
     }
 
     private String statsValue(int value) {
@@ -2524,13 +2527,49 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         return popup;
     }
 
-    /** Drop in: fade and unfold from the top edge, hanging under the anchor pill. */
+    /** Drop in or pop up: displays popup neatly aligned with anchor, flipping upward if anchor is near screen bottom. */
     private void dropIn(PopupWindow popup, View panel, View anchor, int gravity) {
+        panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int panelW = popup.getWidth() > 0 ? popup.getWidth() : panel.getMeasuredWidth();
+        int panelH = panel.getMeasuredHeight();
+
+        int[] loc = new int[2];
+        anchor.getLocationInWindow(loc);
+        int anchorX = loc[0];
+        int anchorY = loc[1];
+        int anchorW = anchor.getWidth();
+        int anchorH = anchor.getHeight();
+
+        int screenW = getResources().getDisplayMetrics().widthPixels;
+        int screenH = getResources().getDisplayMetrics().heightPixels;
+
+        // If anchor is near bottom of screen or popup would run off the bottom, open upward
+        boolean popUp = (anchorY + anchorH + panelH + (int) (16 * density)) > screenH;
+
+        int popupX;
+        if (gravity == Gravity.CENTER_HORIZONTAL) {
+            popupX = anchorX + (anchorW - panelW) / 2;
+        } else if (gravity == Gravity.END) {
+            popupX = anchorX + anchorW - panelW;
+        } else {
+            popupX = anchorX;
+        }
+        popupX = Math.max((int) (12 * density), Math.min(popupX, screenW - panelW - (int) (12 * density)));
+
+        int popupY;
+        if (popUp) {
+            popupY = Math.max((int) (12 * density), anchorY - panelH - (int) (10 * density));
+            panel.setPivotY(panelH);
+            panel.setTranslationY(8 * density);
+        } else {
+            popupY = anchorY + anchorH + (int) (10 * density);
+            panel.setPivotY(0f);
+            panel.setTranslationY(-8 * density);
+        }
+
         panel.setAlpha(0f);
-        panel.setPivotY(0f);
         panel.setScaleY(0.92f);
-        panel.setTranslationY(-8 * density);
-        popup.showAsDropDown(anchor, 0, (int) (10 * density), gravity);
+        popup.showAtLocation(root != null ? root : anchor, Gravity.NO_GRAVITY, popupX, popupY);
         panel.animate().alpha(1f).scaleY(1f).translationY(0f).setDuration(220)
                 .setInterpolator(new android.view.animation.DecelerateInterpolator(1.6f)).start();
     }

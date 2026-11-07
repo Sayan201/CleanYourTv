@@ -34,12 +34,12 @@ android {
             keyPassword 'android'
         }
         release {
-            def keystorePath = System.getenv('ANDROID_KEYSTORE_PATH')
-            if (keystorePath) {
+            def keystorePath = System.getenv('RELEASE_KEYSTORE') ?: System.getenv('ANDROID_KEYSTORE_PATH')
+            if (keystorePath && file(keystorePath).exists()) {
                 storeFile file(keystorePath)
-                storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
-                keyAlias System.getenv('ANDROID_KEY_ALIAS')
-                keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+                storePassword System.getenv('RELEASE_KEY_PASSWORD') ?: System.getenv('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('RELEASE_KEY_ALIAS') ?: System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('RELEASE_KEY_PASSWORD') ?: System.getenv('ANDROID_KEY_PASSWORD')
             } else {
                 storeFile file('../keystore/debug.keystore')
                 storePassword 'android'

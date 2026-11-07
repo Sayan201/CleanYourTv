@@ -10,8 +10,8 @@ android {
         applicationId 'com.sayan.tvhome'
         minSdk 26
         targetSdk 34
-        versionCode 6
-        versionName '2.1.0'
+        versionCode 7
+        versionName '2.1.1'
         buildConfigField "long", "BUILD_TIME", "${System.currentTimeMillis()}L"
     }
 
@@ -27,10 +27,18 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file('../keystore/debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            def customKeystore = System.getenv('RELEASE_KEYSTORE') ?: System.getenv('ANDROID_KEYSTORE_PATH')
+            if (customKeystore && file(customKeystore).exists()) {
+                storeFile file(customKeystore)
+                storePassword System.getenv('RELEASE_KEY_PASSWORD') ?: System.getenv('ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('RELEASE_KEY_ALIAS') ?: System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('RELEASE_KEY_PASSWORD') ?: System.getenv('ANDROID_KEY_PASSWORD')
+            } else {
+                storeFile file('../keystore/debug.keystore')
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
         }
     }
 

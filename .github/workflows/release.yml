@@ -36,6 +36,34 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Configure optional custom signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+        run: |
+          KEYSTORE_DATA="${ANDROID_KEYSTORE_BASE64:-$RELEASE_KEYSTORE_BASE64}"
+          STORE_PASS="${ANDROID_KEYSTORE_PASSWORD:-$RELEASE_KEY_PASSWORD}"
+          KEY_AL="${ANDROID_KEY_ALIAS:-$RELEASE_KEY_ALIAS}"
+          KEY_PASS="${ANDROID_KEY_PASSWORD:-${RELEASE_KEY_PASSWORD:-$STORE_PASS}}"
+
+          if [ -n "$KEYSTORE_DATA" ]; then
+            echo "$KEYSTORE_DATA" | base64 --decode > "$RUNNER_TEMP/cleanyourtv-release.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+            echo "ANDROID_KEYSTORE_PASSWORD=$STORE_PASS" >> "$GITHUB_ENV"
+            echo "ANDROID_KEY_ALIAS=$KEY_AL" >> "$GITHUB_ENV"
+            echo "ANDROID_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+            echo "RELEASE_KEYSTORE=$RUNNER_TEMP/cleanyourtv-release.jks" >> "$GITHUB_ENV"
+            echo "RELEASE_KEY_PASSWORD=$KEY_PASS" >> "$GITHUB_ENV"
+            echo "RELEASE_KEY_ALIAS=$KEY_AL" >> "$GITHUB_ENV"
+            echo "Custom GitHub signing keystore configured successfully."
+          else
+            echo "No custom secrets provided, using deterministic repository keystore."
+          fi
 
       - name: Build CleanYourTv launcher APK
         working-directory: launcher
